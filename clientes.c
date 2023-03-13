@@ -60,9 +60,18 @@ cliente* lerClientes(){
 
     return aux;
 }
+
 void existeCliente(cliente* inicio, int id){
     while(inicio!=NULL){
         if (inicio->id != id);
             inicio = inicio->seguinte;
+    }
+}
+
+// listar na consola o conteúdo da lista ligada
+void listarClientes(cliente* inicio){
+    while (inicio != NULL){
+        printf("ID: %d, Nome: %s, Password: %s, NIF: %d, Morada: %s, Saldo: %.2f\n", inicio->id, inicio->nome, inicio->password, inicio->nif, inicio->morada, inicio->saldo);
+        inicio = inicio->seguinte;
     }
 }

@@ -1,0 +1,2 @@
+2;diogo;dwefg;333444333;wqedfr;123.00
+3;artur;password;111111111;morada;1.00

@@ -133,7 +133,7 @@ void menuGestor(){
         printf("Introduza a sua password:\n");
         scanf("%s", password);
 
-		if (id = verifLoginGestor(inicio, id, password) == 0){
+		if ((id = verifLoginGestor(inicio, id, password)) == 0 ){
             menuGestorLogin();
         }
         break;
@@ -165,9 +165,12 @@ void menuGestor(){
 void menuGestorLogin(){
     int opcao=0;
     int id = getId();
+    int tipo;
     float bat=0;
     float aut=0;
-    transporte* inicio = NULL;
+    transporte* inicioTransporte = NULL;
+    cliente* inicioCliente = NULL;
+
     do {
         printf("M E N U   G E S T O R   L O G I N\n\n");
         printf("1 Adicionar transporte\n");
@@ -177,6 +180,9 @@ void menuGestorLogin(){
 
         switch(opcao){
             case 1:
+            printf("Qual e o tipo do transporte?\n");
+            printf("Selecione 1 trotinete ou 2 bicicleta\n");
+            scanf("%d", &tipo);
             do{
                 printf("Qual e a percentagem da bateria do transporte?\n");
                 scanf("%f", &bat);
@@ -187,12 +193,25 @@ void menuGestorLogin(){
             printf("Qual e a autonomia do transporte?\n");
             scanf("%f", &aut);
             
-            inicio=criarTransporte(inicio, id++, bat, aut);
-            guardarTransporte(inicio);
+            inicioTransporte=criarTransporte(inicioTransporte, id++, tipo, bat, aut);
+            guardarTransporte(inicioTransporte);
+            break;
+
+            case 2:
+            listarTransportes(inicioTransporte);
+            fflush(stdin);
+            getchar();
+            break;
+
+            case 3:
+            listarClientes(inicioCliente);
+            fflush(stdin);
+            getchar();
             break;
         }
     } while(opcao!=0);
 }
+
 
 // M E N U
 
