@@ -1,2 +1,3 @@
-2;diogo;dwefg;333444333;wqedfr;123.00
-3;artur;password;111111111;morada;1.00
+1;Marcelo;pass;555777111;rua.morada;15.00
+3;adelina;dgfhd;333666444;gfdgdfgf;16.04
+5;diogopsgomes;sdfg;458659345;ewfrg;1235.00

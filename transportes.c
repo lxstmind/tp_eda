@@ -29,8 +29,31 @@ void guardarTransporte(transporte* inicio){
     }
 }
 
-// listar na consola o conteúdo da lista ligada
+transporte* lerTransportes(){
+    FILE* fp;
+    fp = fopen("transportes.txt","r");
+    transporte* aux = NULL;
+
+    if (fp!=NULL){
+        int id, tipo;
+        float bat, aut;
+
+        while (!feof(fp)) { 
+            fscanf(fp, "%d;%d;%f;%f\n", &id, &tipo, &bat, &aut);
+            aux = criarTransporte(aux, id, tipo, bat, aut);
+        }
+
+        fclose(fp);
+    }
+
+    return aux;
+}
+
 void listarTransportes(transporte* inicio){
+    if (inicio == NULL) {
+        printf("Nenhum transporte cadastrado.\n");
+        return;
+    }
     while (inicio != NULL){
         printf("ID: %d, Tipo: %d, Bateria: %.2f, Autonomia: %.2f\n", inicio->id, inicio->tipo, inicio->bat, inicio->aut);
         inicio = inicio->seguinte;

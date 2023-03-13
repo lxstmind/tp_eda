@@ -35,16 +35,16 @@ int getId() {
 
 void clear_console(){
      system("@cls||clear"); // linux ou windows
- }
+}
 
 
-// C L I E N T E
+// C L I E N T E S
 
 
 void menuCliente(){
     int opcaoCliente = 0;
     int id = getId();
-    cliente* inicio = NULL;
+    cliente* inicio = lerClientes();
     char password[MAX_PASSWORD_LENGTH + 1];
     int id_received = 0;
     char nome[MAX_NAME_LENGTH + 1];
@@ -65,11 +65,12 @@ void menuCliente(){
         printf("Introduza a sua password:\n");
         scanf("%s", password);
 
-        if (id=verifLoginCliente(inicio, id,password)==0){
-            printf("teste");
-            fflush(stdin);
-            getchar();
+        if (inicio != NULL && verifLoginCliente(inicio, id_received, password) != 0 ){
+            printf("Deu certo");
+        } else {
+            printf("ID ou password incorreto. Tente novamente.\n");
         }
+        printf("%d, %s", id_received, password);
         break;
 	
         case 2:
@@ -104,12 +105,12 @@ void menuCliente(){
         guardarCliente(inicio);
         break;
 	    }
-        clear_console();
+        //clear_console();
         } while (opcaoCliente != 0);
 }
 
 
-// G E S T O R
+// G E S T O R E S
 
 
 void menuGestor(){
@@ -133,10 +134,13 @@ void menuGestor(){
         printf("Introduza a sua password:\n");
         scanf("%s", password);
 
-		if ((id = verifLoginGestor(inicio, id, password)) == 0 ){
-            menuGestorLogin();
-        }
-        break;
+		if (inicio != NULL && verifLoginGestor(inicio, id_received, password) != 0 ){
+                    id = id_received;
+                    menuGestorLogin();
+                } else {
+                    printf("ID ou password incorreto. Tente novamente.\n");
+                }
+                break;
 
         case 2:
         printf("Qual e o teu nome?\n");
@@ -158,7 +162,7 @@ void menuGestor(){
     }
     break;
     }
-    clear_console();
+    //clear_console();
     } while(opcaoGestor!=0);
 }
 
@@ -168,8 +172,8 @@ void menuGestorLogin(){
     int tipo;
     float bat=0;
     float aut=0;
-    transporte* inicioTransporte = NULL;
-    cliente* inicioCliente = NULL;
+    transporte* inicioTransporte = lerTransportes();
+    cliente* inicioCliente = lerClientes();
 
     do {
         printf("M E N U   G E S T O R   L O G I N\n\n");

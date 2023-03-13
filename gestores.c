@@ -18,15 +18,13 @@ gestor* criarContaGestor(gestor * inicio, int id, char password[], char nome[]){
     return inicio;
 }
 
-int verifLoginGestor(gestor* inicio, int id, char password[]) { //comparar o int id com a string da password e ver se der match, verifica devolve 1 se não 0
+int verifLoginGestor(gestor* inicio, int id, char password[]) {
     while (inicio != NULL) {
-        if (inicio->id==id && strcmp(inicio->password, password) == 0) return inicio->id;
-        /* printf("%d %d %s\n", inicio->id, id, password);
-        fflush(stdin);
-        getchar(); */
+        if (inicio->id == id && strcmp(inicio->password, password) == 0) {
+            return inicio->id;
+        }
         inicio = inicio->seguinte;
     }
-
     return 0;
 }
 

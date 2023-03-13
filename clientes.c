@@ -21,13 +21,13 @@ cliente* criarContaCliente(cliente * inicio, int id, char password[], char nome[
     return(inicio);
 }
 
-int verifLoginCliente(cliente* inicio, int id, char password[]) { //comparar o int id com a string da password e ver se dá match, verifica devolve 1 se não 0
+int verifLoginCliente(cliente* inicio, int id, char password[]) {
     while (inicio != NULL) {
-        if (inicio->id==id && strcmp(inicio->password, password) == 0) return inicio->id;
-
+        if (inicio->id == id && strcmp(inicio->password, password) == 0) {
+            return inicio->id;
+        }
         inicio = inicio->seguinte;
     }
-
     return 0;
 }
 
@@ -47,12 +47,13 @@ cliente* lerClientes(){
     cliente* aux = NULL;
 
     if (fp!=NULL){
-        int id;
-        char nome[MAX_NAME_LENGTH + 1], password[MAX_PASSWORD_LENGTH + 1];
+        int id, nif;
+        char nome[MAX_NAME_LENGTH + 1], password[MAX_PASSWORD_LENGTH + 1], morada[MAX_MORADA_LENGTH + 1];
+        float saldo;
 
         while (!feof(fp)) { 
-            fscanf(fp, "%d;%[^;];%[^\n]\n", &id, &nome, &password);
-            //aux = criarContaCliente(aux, id, password, nome);
+            fscanf(fp, "%d;%[^;];%[^;];%d;%[^;];%f\n", &id, &nome, &password, &nif, &morada, &saldo);
+            aux = criarContaCliente(aux, id, password, nome, nif, morada, saldo);
         }
 
         fclose(fp);
@@ -61,17 +62,17 @@ cliente* lerClientes(){
     return aux;
 }
 
-void existeCliente(cliente* inicio, int id){
-    while(inicio!=NULL){
-        if (inicio->id != id);
-            inicio = inicio->seguinte;
-    }
-}
-
 // listar na consola o conteúdo da lista ligada
 void listarClientes(cliente* inicio){
     while (inicio != NULL){
         printf("ID: %d, Nome: %s, Password: %s, NIF: %d, Morada: %s, Saldo: %.2f\n", inicio->id, inicio->nome, inicio->password, inicio->nif, inicio->morada, inicio->saldo);
         inicio = inicio->seguinte;
+    }
+}
+
+void existeCliente(cliente* inicio, int id){
+    while(inicio!=NULL){
+        if (inicio->id != id);
+            inicio = inicio->seguinte;
     }
 }
