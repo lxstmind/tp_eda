@@ -11,7 +11,7 @@ int getId() {
 
     if (fp_clientes) { //verificar se o ficheiro existe
         //abre o ficheiro de clientes e verifica linha a linha no tamanho dos caracteretes
-        while (fgets(buffer, MAX_LOCAL_LENGTH + MAX_MORADA_LENGTH + MAX_NAME_LENGTH + MAX_PASSWORD_LENGTH + 1, fp_clientes) != NULL) { 
+        while (fgets(buffer, MAX_LOCAL_LENGTH + MAX_MORADA_LENGTH + MAX_NAME_LENGTH + MAX_PASSWORD_LENGTH + 1, fp_clientes) != NULL) { //fgets pega na string e o atoi converte a string num int
             int current_id = atoi(strtok(buffer, ";")); //pega no id atual que é até ao primeiro ";" só até ao primeiro ;
             if (current_id > id_clientes) { //verificar os casos das linhas duplicadas (muito raro, quase impossivel só um burro é que fode isso ao por um numero negativo)
                 id_clientes = current_id;
@@ -66,7 +66,7 @@ void menuCliente(){
         scanf("%s", password);
 
         if (inicio != NULL && verifLoginCliente(inicio, id_received, password) != 0 ){
-            printf("Deu certo");
+            menuClienteLogin();
         } else {
             printf("ID ou password incorreto. Tente novamente.\n");
         }
@@ -107,6 +107,29 @@ void menuCliente(){
 	    }
         //clear_console();
         } while (opcaoCliente != 0);
+}
+
+void menuClienteLogin(){
+    int opcao=0;
+    int id = getId();
+    int tipo;
+    float bat=0;
+    float aut=0;
+    cliente* inicioCliente = lerClientes(id);
+
+    do{
+        printf("M E N U   C L I E N T E   L O G I N\n\n");
+        printf("1 Ver dados da conta\n");
+        printf("0 Voltar atras\n");
+        scanf("%d", &opcao);
+
+        switch(opcao){
+            case 1:
+            printf("ID: %d, Nome: %s, NIF: %d, Morada: %s, Saldo: %d\n", inicioCliente->id, inicioCliente->nome, inicioCliente->nif, inicioCliente->morada, inicioCliente->saldo);
+            break;
+        }
+
+    } while(opcao!=0);
 }
 
 
@@ -170,6 +193,8 @@ void menuGestorLogin(){
     int opcao=0;
     int id = getId();
     int tipo;
+    char localizacao[MAX_MORADA_LENGTH +1];
+    float custo=0;
     float bat=0;
     float aut=0;
     transporte* inicioTransporte = lerTransportes();
@@ -180,6 +205,7 @@ void menuGestorLogin(){
         printf("1 Adicionar transporte\n");
         printf("2 Listar transportes por ordem crescente de bateria\n");
         printf("3 Listar clientes\n");
+        printf("0 Voltar atras\n");
         scanf("%d", &opcao);
 
         switch(opcao){
@@ -187,6 +213,10 @@ void menuGestorLogin(){
             printf("Qual e o tipo do transporte?\n");
             printf("Selecione 1 trotinete ou 2 bicicleta\n");
             scanf("%d", &tipo);
+            printf("Qual e a localizacao do transporte?\n");
+            scanf("%31s", &localizacao);
+            printf("Qual e o custo por hora do transporte?\n");
+            scanf("%f", &custo);
             do{
                 printf("Qual e a percentagem da bateria do transporte?\n");
                 scanf("%f", &bat);
@@ -197,7 +227,7 @@ void menuGestorLogin(){
             printf("Qual e a autonomia do transporte?\n");
             scanf("%f", &aut);
             
-            inicioTransporte=criarTransporte(inicioTransporte, id++, tipo, bat, aut);
+            inicioTransporte=criarTransporte(inicioTransporte, id++, tipo, localizacao, custo, bat, aut);
             guardarTransporte(inicioTransporte);
             break;
 

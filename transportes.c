@@ -4,12 +4,14 @@
 #include "header.h"
 
 //Inserção de um meio de transporte
-transporte* criarTransporte(transporte * inicio, int id, int tipo, float bat, float aut){
+transporte* criarTransporte(transporte * inicio, int id, int tipo, char localizacao[], float custo, float bat, float aut){
     //if (!existeGestor(inicio, id)){
         transporte * novo = malloc(sizeof(struct transporte));
         if (novo != NULL) {
             novo->id = id;
             novo->tipo = tipo;
+            strcpy(novo->localizacao, localizacao);
+            novo->custo = custo;
             novo->bat = bat;
             novo->aut = aut;
             novo->seguinte = inicio;
@@ -24,7 +26,7 @@ void guardarTransporte(transporte* inicio){
     fp = fopen("transportes.txt","a");
     if (fp!=NULL){
         transporte* aux= inicio;
-        fprintf(fp,"%d;%d;%.2f;%.2f\n", aux->id, aux-> tipo, aux->bat, aux->aut);
+        fprintf(fp,"%d;%d;%s;%.2f;%.2f;%.2f\n", aux->id, aux-> tipo, aux-> localizacao, aux->custo, aux->bat, aux->aut);
         fclose(fp);
     }
 }
@@ -36,11 +38,12 @@ transporte* lerTransportes(){
 
     if (fp!=NULL){
         int id, tipo;
-        float bat, aut;
+        char localizacao[MAX_MORADA_LENGTH + 1];
+        float custo, bat, aut;
 
         while (!feof(fp)) { 
-            fscanf(fp, "%d;%d;%f;%f\n", &id, &tipo, &bat, &aut);
-            aux = criarTransporte(aux, id, tipo, bat, aut);
+            fscanf(fp, "%d;%d;%s;%f;%f;%f\n", &id, &tipo, &localizacao, &custo, &bat, &aut);
+            aux = criarTransporte(aux, id, tipo, localizacao, custo, bat, aut);
         }
 
         fclose(fp);
@@ -55,7 +58,7 @@ void listarTransportes(transporte* inicio){
         return;
     }
     while (inicio != NULL){
-        printf("ID: %d, Tipo: %d, Bateria: %.2f, Autonomia: %.2f\n", inicio->id, inicio->tipo, inicio->bat, inicio->aut);
+        printf("ID: %d, Tipo: %d, Localizacao: %s, Custo: %.2f, Bateria: %.2f, Autonomia: %.2f\n", inicio->id, inicio->tipo, inicio->localizacao, inicio->custo, inicio->bat, inicio->aut);
         inicio = inicio->seguinte;
     }
 }

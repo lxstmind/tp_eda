@@ -14,6 +14,11 @@ EDITAR;
 REMOVER;
 */
 
+
+
+//organizar os prints dos veiculos por tipo e por % de bateria.
+
+
 int main(){
     menu();
 }

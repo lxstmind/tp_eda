@@ -41,6 +41,8 @@ typedef struct gestor{
 typedef struct transporte{
     int id;
     int tipo;
+    char localizacao[MAX_MORADA_LENGTH + 1];
+    float custo;
     float bat;
     float aut;
     struct transporte* seguinte;
@@ -66,9 +68,11 @@ void guardarGestor(gestor* inicio);
 gestor* lerGestores();
 
 void menuGestorLogin();
-transporte* criarTransporte(transporte * inicio, int id, int tipo, float bat, float aut);
+transporte* criarTransporte(transporte * inicio, int id, int tipo, char localizacao[], float custo, float bat, float aut);
 void guardarTransporte(transporte* inicio);
 void listarTransportes(transporte* inicio);
 transporte* lerTransportes();
 
+void menuClienteLogin();
+cliente* lerApenasCliente(int id);
 #endif

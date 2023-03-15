@@ -62,6 +62,37 @@ cliente* lerClientes(){
     return aux;
 }
 
+cliente* lerApenasCliente(int id) {
+    FILE* fp;
+    fp = fopen("clientes.txt", "r");
+    cliente* aux = NULL;
+
+    if (fp != NULL) {
+        int nif;
+        char nome[MAX_NAME_LENGTH + 1], password[MAX_PASSWORD_LENGTH + 1], morada[MAX_MORADA_LENGTH + 1];
+        float saldo;
+
+        while (!feof(fp)) {
+            int current_id;
+            fscanf(fp, "%d;", &current_id);
+            if (current_id == id) {
+                fscanf(fp, "%[^;];%[^;];%d;%[^;];%f\n", nome, password, &nif, morada, &saldo);
+                aux = criarContaCliente(aux, id, password, nome, nif, morada, saldo);
+                break;
+            }
+            else {
+                // ler o restante da linha e descartar
+                char c;
+                while ((c = fgetc(fp)) != '\n' && c != EOF);
+            }
+        }
+
+        fclose(fp);
+    }
+
+    return aux;
+}
+
 // listar na consola o conteúdo da lista ligada
 void listarClientes(cliente* inicio){
     while (inicio != NULL){
