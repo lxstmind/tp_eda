@@ -116,16 +116,23 @@ void menuClienteLogin(){
     float bat=0;
     float aut=0;
     cliente* inicioCliente = lerClientes(id);
+    transporte* inicioTransporte = lerTransportes();
 
     do{
         printf("M E N U   C L I E N T E   L O G I N\n\n");
         printf("1 Ver dados da conta\n");
+        printf("2 Listar transportes\n");
         printf("0 Voltar atras\n");
         scanf("%d", &opcao);
 
         switch(opcao){
             case 1:
-            printf("ID: %d, Nome: %s, NIF: %d, Morada: %s, Saldo: %d\n", inicioCliente->id, inicioCliente->nome, inicioCliente->nif, inicioCliente->morada, inicioCliente->saldo);
+            listarClientes(inicioCliente);
+            break;
+            case 2:
+            listarPorBateria(inicioTransporte);
+            fflush(stdin);
+            getchar();
             break;
         }
 
@@ -203,7 +210,7 @@ void menuGestorLogin(){
     do {
         printf("M E N U   G E S T O R   L O G I N\n\n");
         printf("1 Adicionar transporte\n");
-        printf("2 Listar transportes por ordem crescente de bateria\n");
+        printf("2 Listar transportes\n");
         printf("3 Listar clientes\n");
         printf("0 Voltar atras\n");
         scanf("%d", &opcao);
@@ -232,7 +239,7 @@ void menuGestorLogin(){
             break;
 
             case 2:
-            listarTransportes(inicioTransporte);
+            listarPorBateria(inicioTransporte);
             fflush(stdin);
             getchar();
             break;

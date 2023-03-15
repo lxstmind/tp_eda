@@ -70,8 +70,10 @@ gestor* lerGestores();
 void menuGestorLogin();
 transporte* criarTransporte(transporte * inicio, int id, int tipo, char localizacao[], float custo, float bat, float aut);
 void guardarTransporte(transporte* inicio);
-void listarTransportes(transporte* inicio);
+//void listarTransportes(transporte* inicio);
 transporte* lerTransportes();
+void ordenarPorBateria(transporte* inicio);
+void listarPorBateria(transporte* inicio);
 
 void menuClienteLogin();
 cliente* lerApenasCliente(int id);

@@ -102,6 +102,10 @@ void listarClientes(cliente* inicio){
 }
 
 void existeCliente(cliente* inicio, int id){
+    if (inicio == NULL) {
+        printf("Nenhum cliente registado.\n");
+        return;
+    }
     while(inicio!=NULL){
         if (inicio->id != id);
             inicio = inicio->seguinte;

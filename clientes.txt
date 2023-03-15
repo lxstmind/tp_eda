@@ -1,1 +1,1 @@
-2;marcelo;pass;123123123;rua.ipca.barcelos;15.75
+2;marcelo;pass;123123123;rua.ipca.barcelos;15.750000

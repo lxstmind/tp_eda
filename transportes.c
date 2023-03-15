@@ -42,7 +42,7 @@ transporte* lerTransportes(){
         float custo, bat, aut;
 
         while (!feof(fp)) { 
-            fscanf(fp, "%d;%d;%s;%f;%f;%f\n", &id, &tipo, &localizacao, &custo, &bat, &aut);
+            fscanf(fp, "%d;%d;%[^;];%f;%f;%f\n", &id, &tipo, &localizacao, &custo, &bat, &aut);
             aux = criarTransporte(aux, id, tipo, localizacao, custo, bat, aut);
         }
 
@@ -52,11 +52,38 @@ transporte* lerTransportes(){
     return aux;
 }
 
-void listarTransportes(transporte* inicio){
+void ordenarPorBateria(transporte* inicio) {
+    int trocado = 1;
+    while (trocado) {
+        trocado = 0;
+        transporte* anterior = NULL;
+        transporte* atual = inicio;
+        while (atual->seguinte != NULL) {
+            if (atual->bat < atual->seguinte->bat) {
+                transporte* proximo = atual->seguinte;
+                atual->seguinte = proximo->seguinte;
+                proximo->seguinte = atual;
+                if (anterior != NULL) {
+                    anterior->seguinte = proximo;
+                } else {
+                    inicio = proximo;
+                }
+                anterior = proximo;
+                trocado = 1;
+            } else {
+                anterior = atual;
+                atual = atual->seguinte;
+            }
+        }
+    }
+}
+
+void listarPorBateria(transporte* inicio) {
     if (inicio == NULL) {
-        printf("Nenhum transporte cadastrado.\n");
+        printf("Nenhum transporte registado.\n");
         return;
     }
+    ordenarPorBateria(inicio);
     while (inicio != NULL){
         printf("ID: %d, Tipo: %d, Localizacao: %s, Custo: %.2f, Bateria: %.2f, Autonomia: %.2f\n", inicio->id, inicio->tipo, inicio->localizacao, inicio->custo, inicio->bat, inicio->aut);
         inicio = inicio->seguinte;
