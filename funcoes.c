@@ -75,7 +75,8 @@ void menuCliente(){
 	
         case 2:
         printf("Qual e o teu nome?\n");
-        scanf("%63s", nome);
+        fflush(stdin);
+        scanf("%[^\n]", nome);
         //Loop para garantir que o nif tem 9 numeros
             do {
                 printf("Qual e o teu NIF?\n");
@@ -115,21 +116,29 @@ void menuClienteLogin(){
     int tipo;
     float bat=0;
     float aut=0;
-    cliente* inicioCliente = lerClientes(id);
+    cliente* inicioCliente = lerClientes();
     transporte* inicioTransporte = lerTransportes();
 
     do{
         printf("M E N U   C L I E N T E   L O G I N\n\n");
         printf("1 Ver dados da conta\n");
-        printf("2 Listar transportes\n");
+        printf("2 Alterar dados da conta\n");
+        printf("3 Listar transportes\n");
         printf("0 Voltar atras\n");
         scanf("%d", &opcao);
 
         switch(opcao){
             case 1:
-            listarClientes(inicioCliente);
+            listarApenasCliente(inicioCliente, id);
+            fflush(stdin);
+            getchar();
             break;
             case 2:
+            alterarDadosCliente(inicioCliente, id);
+            fflush(stdin);
+            getchar();
+            break;
+            case 3:
             listarPorBateria(inicioTransporte);
             fflush(stdin);
             getchar();
@@ -174,7 +183,8 @@ void menuGestor(){
 
         case 2:
         printf("Qual e o teu nome?\n");
-        scanf("%63s", nome);
+        fflush(stdin);
+        scanf("%[^\n]", nome);
         printf("Qual e a sua password?\n");
         scanf("%31s", password);
         printf("Guarde o seu ID para utilizar no inicio da sua proxima sessao: %d\n", id);
@@ -212,6 +222,9 @@ void menuGestorLogin(){
         printf("1 Adicionar transporte\n");
         printf("2 Listar transportes\n");
         printf("3 Listar clientes\n");
+        printf("4 Remover cliente\n");
+        printf("5 Remover transporte\n");
+        printf("6 Alterar dados de transportes\n");
         printf("0 Voltar atras\n");
         scanf("%d", &opcao);
 
@@ -248,7 +261,23 @@ void menuGestorLogin(){
             listarClientes(inicioCliente);
             fflush(stdin);
             getchar();
+
+            case 4:
+            removerCliente(inicioCliente, id);
+            fflush(stdin);
+            getchar();
             break;
+
+            case 5:
+            removerTransporte(inicioTransporte, id);
+            fflush(stdin);
+            getchar();
+            break;
+
+            case 6:
+            alterarDadosTransporte(inicioTransporte, id);
+            fflush(stdin);
+            getchar();
         }
     } while(opcao!=0);
 }

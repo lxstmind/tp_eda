@@ -59,6 +59,7 @@ int verifLoginCliente(cliente* inicio, int id, char password[]);
 void guardarCliente(cliente* inicio);
 cliente* lerClientes();
 void listarClientes(cliente* inicio);
+cliente* lerApenasCliente(int id);
 
 void menuGestor();
 gestor* criarContaGestor(gestor * inicio, int id, char password[], char nome[]); // Inserção de um novo registo de um gestor
@@ -70,11 +71,14 @@ gestor* lerGestores();
 void menuGestorLogin();
 transporte* criarTransporte(transporte * inicio, int id, int tipo, char localizacao[], float custo, float bat, float aut);
 void guardarTransporte(transporte* inicio);
-//void listarTransportes(transporte* inicio);
 transporte* lerTransportes();
 void ordenarPorBateria(transporte* inicio);
 void listarPorBateria(transporte* inicio);
 
 void menuClienteLogin();
-cliente* lerApenasCliente(int id);
+void listarApenasCliente(cliente* inicio, int id);
+cliente* removerCliente(cliente* inicio, int id);
+transporte* removerTransporte(transporte* inicio, int id);
+void alterarDadosCliente(cliente* inicio, int id);
+void alterarDadosTransporte(transporte* inicio, int id);
 #endif

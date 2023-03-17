@@ -89,3 +89,87 @@ void listarPorBateria(transporte* inicio) {
         inicio = inicio->seguinte;
     }
 }
+
+void alterarDadosTransporte(transporte* inicio, int id) {
+    transporte* aux = inicio;
+    int opcao;
+
+    while (aux != NULL) {
+        if (aux->id == id) {
+            printf("Dados atuais:\n");
+            printf("ID: %d, Tipo: %d, Localizacao: %s, Custo: %.2f, Bateria: %.2f, Autonomia: %.2f\n", aux->id, aux -> tipo, aux->localizacao, aux->custo, aux->bat, aux->aut);
+            printf("\nDigite o número correspondente à opção que deseja alterar:\n");
+            printf("1 - Tipo\n2 - Localizacao\n3 - Custo\n4 - Bateria\n5 - Autonomia\n0 - Sair\n");
+
+            scanf("%d", &opcao);
+
+            switch (opcao) {
+                case 1:
+                    printf("Digite o novo tipo: ");
+                    scanf("%d", aux->tipo);
+                    printf("Nome alterado com sucesso!\n");
+                    break;
+
+                case 2:
+                    printf("Digite a nova localizacao: ");
+                    scanf("%s", aux->localizacao);
+                    printf("Password alterada com sucesso!\n");
+                    break;
+
+                case 3:
+                    printf("Digite o novo custo: ");
+                    scanf("%f", &aux->custo);
+                    printf("NIF alterado com sucesso!\n");
+                    break;
+
+                case 4:
+                    printf("Digite a nova bateria: ");
+                    scanf("%f", aux->bat);
+                    printf("Morada alterada com sucesso!\n");
+                    break;
+
+                case 5:
+                    printf("Digite a nova autonomia: ");
+                    scanf("%f", &aux->aut);
+                    printf("Saldo alterado com sucesso!\n");
+                    break;
+
+                case 0:
+                    printf("Saindo...\n");
+                    return;
+
+                default:
+                    printf("Opcaoo invalida.\n");
+            }
+        break;
+        }
+        aux = aux->seguinte;
+    }
+
+    if (aux == NULL) {
+        printf("Transporte nao encontrado.\n");
+    }
+}
+
+transporte* removerTransporte(transporte* inicio, int id) {
+    transporte *anterior=inicio, *atual=inicio, *aux;
+
+    if (atual==NULL) return(NULL);
+    else if (atual->id == id){ // remoção do 1º registo
+    aux = atual->seguinte;
+    free(atual);
+    return(aux);
+    }
+    else
+    { while ((atual!=NULL)&&(atual->id!=id)) 
+    {anterior = atual;
+    atual = atual->seguinte;
+    }
+    if (atual==NULL) return(inicio);
+    else
+    {anterior->seguinte = atual->seguinte;
+    free(atual);
+    return(inicio);
+    }
+    }
+}

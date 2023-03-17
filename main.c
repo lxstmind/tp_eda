@@ -1,23 +1,18 @@
 #include <stdio.h>
 #include "header.h"
 
-// cliente: mostrar transportes disponiveis
-// gestor: adicionar transportes e mostrar os transportes
-
-
 /*
-PROXIMO PASSO:
+clientes:
 
-ADICIONAR TRANSPORTES; (BATERIAS E MERDAS DE AUTONOMIA)
-LER;
-EDITAR;
-REMOVER;
+alterar dados (apenas do proprio cliente);
+
+gestores:
+
+alterar dados (clientes e transportes);
+remover dados (clientes e transportes); (mais ou menos)
+
+binario (?);
 */
-
-
-
-//organizar os prints dos veiculos por tipo e por % de bateria.
-
 
 int main(){
     menu();
