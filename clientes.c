@@ -164,39 +164,3 @@ void alterarDadosCliente(cliente* inicio, int id) {
 
     printf("Dados do cliente atualizados com sucesso!\n");
 }
-
-
-void removerCliente(int idCliente) {
-    FILE *arquivo, *arquivoTemporario;
-    cliente clienteAtual;
-    long tamanhoCliente = sizeof(clienteAtual);
-
-    arquivo = fopen("clientes.txt", "rb");
-    arquivoTemporario = fopen("clientesTemp.txt", "wb");
-
-    if (arquivo == NULL || arquivoTemporario == NULL) {
-        printf("Erro ao abrir os arquivos!\n");
-        return;
-    }
-
-    while (fread(&clienteAtual, tamanhoCliente, 1, arquivo)) {
-        if (clienteAtual.id != idCliente) {
-            fwrite(&clienteAtual, tamanhoCliente, 1, arquivoTemporario);
-        }
-    }
-
-    fclose(arquivo);
-    fclose(arquivoTemporario);
-
-    if (remove("clientes.txt") != 0) {
-        printf("Erro ao remover o arquivo original!\n");
-        return;
-    }
-
-    if (rename("clientesTemp.txt", "clientes.txt") != 0) {
-        printf("Erro ao renomear o arquivo temporario!\n");
-        return;
-    }
-
-    printf("Cliente com ID %d removido do arquivo!\n", idCliente);
-}

@@ -209,7 +209,7 @@ void menuGestor(){
 void menuGestorLogin(){
     int opcao=0;
     int id = getId("transportes.txt");
-    int idCliente, idTransporte;
+    int idCliente, idTransporte, idLogin;
     int tipo;
     char localizacao[MAX_MORADA_LENGTH +1];
     float custo=0;
@@ -222,10 +222,11 @@ void menuGestorLogin(){
         printf("M E N U   G E S T O R   L O G I N\n\n");
         printf("1 Adicionar transporte\n");
         printf("2 Listar transportes\n");
-        printf("3 Listar clientes\n");
-        printf("4 Remover cliente\n");
-        printf("5 Remover transporte\n");
-        printf("6 Alterar dados de transportes\n");
+        printf("3 Alterar dados de transportes\n");
+        printf("4 Remover transporte\n");
+        printf("5 Listar clientes\n");
+        printf("6 Alterar dados de cliente\n");
+        printf("7 Remover cliente\n");
         printf("0 Voltar atras\n");
         scanf("%d", &opcao);
 
@@ -259,31 +260,31 @@ void menuGestorLogin(){
             break;
 
             case 3:
+            printf("Qual e o ID do transporte que pretende alterar os dados?\n");
+            scanf("%d", &idLogin);
+            alterarDadosTransporte(inicioTransporte, idLogin);
+            fflush(stdin);
+            getchar();
+            break;
+
+            case 4:
+            break;
+
+            case 5:
             listarClientes(inicioCliente);
             fflush(stdin);
             getchar();
 
-            case 4:
-            printf("Digite o ID do cliente a ser removido: ");
-            scanf("%d", &idCliente);
-            removerCliente(idCliente);
-            fflush(stdin);
-            getchar();
-            break;
-
-            case 5:
-            printf("Digite o ID do transporte a ser removido: ");
-            scanf("%d", &idTransporte);
-            // chama a função "removerTransporte"
-            removerTransporte("transportes.txt", idTransporte);
-            fflush(stdin);
-            getchar();
-            break;
-
             case 6:
-            alterarDadosTransporte(inicioTransporte, id);
+            printf("Qual e o ID do cliente que pretende alterar os dados?\n");
+            scanf("%d", &idLogin);
+            alterarDadosCliente(inicioCliente, idLogin);
             fflush(stdin);
             getchar();
+            break;
+
+            case 7:
+            break;
         }
     } while(opcao!=0);
 }

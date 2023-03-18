@@ -67,13 +67,13 @@ void listarPorBateria(transporte* inicio);
 
 void menuClienteLogin();
 void listarApenasCliente(cliente* inicio, int idLogin);
-void removerCliente(int idCliente);
-void removerTransporte(char nomeArquivo[], int idTransporte);
 void alterarDadosCliente(cliente* inicio, int id);
 void alterarDadosTransporte(transporte* inicio, int id);
 void atualizarDadosCliente(cliente* inicio);
 
 void imprimirCliente(cliente* c);
 cliente* buscarCliente(cliente* inicio, int id);
-
+void alterarDadosTransporte(transporte* inicio, int id);
+transporte* buscarTransporte(transporte* inicio, int id);
+void imprimirTransporte(transporte* c);
 #endif

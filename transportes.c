@@ -88,93 +88,102 @@ void listarPorBateria(transporte* inicio) {
 }
 
 void alterarDadosTransporte(transporte* inicio, int id) {
-    transporte* aux = inicio;
+    transporte* transporteAtual = buscarTransporte(inicio, id);
+    if (transporteAtual == NULL) {
+        printf("Erro: transporte nao encontrado.\n");
+        return;
+    }
+
     int opcao;
+    do {
+        printf("Escolha o que deseja alterar:\n");
+        printf("1 - Tipo: %d\n", transporteAtual->tipo);
+        printf("2 - Localizacao: %s\n", transporteAtual->localizacao);
+        printf("3 - Custo: %.2f\n", transporteAtual->custo);
+        printf("4 - Bateria: %.2f\n", transporteAtual->bat);
+        printf("5 - Autonomia: %.2f\n", transporteAtual->aut);
+        printf("0 - Confirmar alteracao de dados e sair\n");
+        scanf("%d", &opcao);
+
+        switch (opcao) {
+            case 1:
+                printf("Qual o novo tipo de transporte?\n");
+                scanf("%d", &transporteAtual->tipo);
+                break;
+            case 2:
+                printf("Qual a nova localizacao do transporte?\n");
+                scanf("%s", transporteAtual->localizacao);
+                break;
+            case 3:
+                do {
+                    printf("Qual o novo custo do transporte?\n");
+                    scanf("%f", &transporteAtual->custo);
+
+                    if (transporteAtual->custo < 0) {
+                        printf("Erro: o custo deve ser positivo.\n");
+                    }
+                } while (transporteAtual->custo < 0);
+                break;
+            case 4:
+                do {
+                    printf("Qual a nova bateria do transporte?\n");
+                    scanf("%f", &transporteAtual->bat);
+
+                    if (transporteAtual->bat < 0) {
+                        printf("Erro: a bateria deve ser positiva.\n");
+                    }
+                } while (transporteAtual->bat < 0);
+                break;
+            case 5:
+                do {
+                    printf("Qual a nova autonomia do transporte?\n");
+                    scanf("%f", &transporteAtual->aut);
+
+                    if (transporteAtual->aut < 0) {
+                        printf("Erro: a autonomia deve ser positiva.\n");
+                    }
+                } while (transporteAtual->aut < 0);
+                break;
+            case 0:
+                break;
+            default:
+                printf("Opcao invalida.\n");
+                break;
+        }
+    } while (opcao != 0);
+
+    // atualiza os dados do arquivo
+    FILE* fp = fopen("transportes.txt", "w+");
+    if (fp == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return;
+    }
+
+    // escreve todos os transportes atualizados no arquivo
+    while (inicio != NULL) {
+        fprintf(fp, "%d;%d;%s;%.2f;%.2f;%.2f\n", inicio->id, inicio->tipo, inicio->localizacao, inicio->custo, inicio->bat, inicio->aut);
+        inicio = inicio->seguinte;
+    }
+
+    fclose(fp);
+
+    printf("Dados do transporte atualizados com sucesso!\n");
+}
+
+transporte* buscarTransporte(transporte* inicio, int id) {
+    transporte* aux = inicio;
 
     while (aux != NULL) {
         if (aux->id == id) {
-            printf("Dados atuais:\n");
-            printf("ID: %d, Tipo: %d, Localizacao: %s, Custo: %.2f, Bateria: %.2f, Autonomia: %.2f\n", aux->id, aux -> tipo, aux->localizacao, aux->custo, aux->bat, aux->aut);
-            printf("\nDigite o numero correspondente a opcao que deseja alterar:\n");
-            printf("1 - Tipo\n2 - Localizacao\n3 - Custo\n4 - Bateria\n5 - Autonomia\n0 - Sair\n");
-
-            scanf("%d", &opcao);
-
-            switch (opcao) {
-                case 1:
-                    printf("Digite o novo tipo: ");
-                    scanf("%d", aux->tipo);
-                    printf("Tipo alterado com sucesso!\n");
-                    break;
-
-                case 2:
-                    printf("Digite a nova localizacao: ");
-                    scanf("%s", aux->localizacao);
-                    printf("Localizacao alterada com sucesso!\n");
-                    break;
-
-                case 3:
-                    printf("Digite o novo custo: ");
-                    scanf("%f", &aux->custo);
-                    printf("Custo alterado com sucesso!\n");
-                    break;
-
-                case 4:
-                    printf("Digite a nova bateria: ");
-                    scanf("%f", aux->bat);
-                    printf("Bateria alterada com sucesso!\n");
-                    break;
-
-                case 5:
-                    printf("Digite a nova autonomia: ");
-                    scanf("%f", &aux->aut);
-                    printf("Autonomia alterado com sucesso!\n");
-                    break;
-
-                case 0:
-                    printf("Voltar atras\n");
-                    return;
-
-                default:
-                    printf("Opcaoo invalida.\n");
-            }
-        break;
+            return aux;
         }
         aux = aux->seguinte;
     }
 
-    if (aux == NULL) {
-        printf("Transporte nao encontrado.\n");
-    }
+    // se chegou aqui, o cliente não foi encontrado
+    return NULL;
 }
 
-void removerTransporte(char nomeArquivo[], int idTransporte) {
-    FILE *arquivo;
-    transporte transporteAtual;
-    long tamanhoTransporte = sizeof(transporteAtual);
-    int encontrado = 0;
-
-    arquivo = fopen(nomeArquivo, "r+b");
-    if (arquivo == NULL) {
-        printf("Erro ao abrir o arquivo %s.\n", nomeArquivo);
-        return;
-    }
-
-    while (fread(&transporteAtual, tamanhoTransporte, 1, arquivo)) {
-        if (transporteAtual.id == idTransporte) {
-            encontrado = 1;
-            fseek(arquivo, -tamanhoTransporte, SEEK_CUR);
-            transporteAtual.id = -1; // marca o transporte como removido
-            fwrite(&transporteAtual, tamanhoTransporte, 1, arquivo);
-            break;
-        }
-    }
-
-    if (encontrado) {
-        printf("Transporte com ID %d removido com sucesso.\n", idTransporte);
-    } else {
-        printf("Transporte com ID %d nao encontrado.\n", idTransporte);
-    }
-
-    fclose(arquivo);
+void imprimirTransporte(transporte* c) {
+    printf("ID: %d, Tipo: %d, Custo: %.2f, Bateria: %.2f, Autonomia: %.2f", c->id, c->tipo, c->custo, c->bat, c->aut);
 }
