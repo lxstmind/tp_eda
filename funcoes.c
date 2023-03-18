@@ -11,7 +11,7 @@ int getId(char * file_name) {
     //abre o ficheiro de clientes e verifica linha a linha no tamanho dos caracteretes
         while (fgets(buffer, MAX_LOCAL_LENGTH + MAX_MORADA_LENGTH + MAX_NAME_LENGTH + MAX_PASSWORD_LENGTH + 1, fp) != NULL) { //fgets pega na string e o atoi converte a string num int
             int current_id = atoi(strtok(buffer, ";")); //pega no id atual que é até ao primeiro ";" só até ao primeiro ;
-            if (current_id > id) { //verificar os casos das linhas duplicadas (muito raro, quase impossivel só um burro é que fode isso ao por um numero negativo)
+            if (current_id > id) { //verificar os casos das linhas duplicadas
                 id = current_id;
             }
         }
@@ -21,7 +21,7 @@ int getId(char * file_name) {
 }
 
 void clear_console(){
-     system("@cls||clear"); // linux ou windows
+     system("@cls||clear");
 }
 
 
@@ -98,13 +98,24 @@ void menuCliente(){
 }
 
 void menuClienteLogin(){
-    int opcao=0;
+    int opcao=0, idLogin;
     int id = getId("clientes.txt");
     int tipo;
     float bat=0;
     float aut=0;
     cliente* inicioCliente = lerClientes();
     transporte* inicioTransporte = lerTransportes();
+
+    printf("Confirme o seu ID novamente para mostrar que nao e robo.\n");
+    scanf("%d", &idLogin);
+
+    // buscar o cliente correspondente ao ID informado
+    cliente* clienteLogado = buscarCliente(inicioCliente, idLogin);
+
+    if (clienteLogado == NULL) {
+        printf("Erro: cliente nao encontrado.\n");
+        return;
+    }
 
     do{
         printf("M E N U   C L I E N T E   L O G I N\n\n");
@@ -116,24 +127,26 @@ void menuClienteLogin(){
 
         switch(opcao){
             case 1:
-            listarApenasCliente(inicioCliente, id);
-            fflush(stdin);
-            getchar();
-            break;
+                imprimirCliente(clienteLogado);
+                fflush(stdin);
+                getchar();
+                break;
             case 2:
-            alterarDadosCliente(inicioCliente, id);
-            fflush(stdin);
-            getchar();
-            break;
+                alterarDadosCliente(inicioCliente, idLogin);
+                fflush(stdin);
+                getchar();
+                break;
             case 3:
-            listarPorBateria(inicioTransporte);
-            fflush(stdin);
-            getchar();
-            break;
+                printf("Tenha atencao que o tipo 1 e trotinete e o tipo 2 e bicicleta.\n");
+                listarPorBateria(inicioTransporte);
+                fflush(stdin);
+                getchar();
+                break;
         }
 
     } while(opcao!=0);
 }
+
 
 
 // G E S T O R E S
@@ -251,8 +264,8 @@ void menuGestorLogin(){
             getchar();
 
             case 4:
-            printf("Digite o ID do cliente que deseja remover: ");
-            scanf("%d", &idCliente); // atribui o valor aqui
+            printf("Digite o ID do cliente a ser removido: ");
+            scanf("%d", &idCliente);
             removerCliente(idCliente);
             fflush(stdin);
             getchar();

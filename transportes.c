@@ -3,9 +3,7 @@
 #include <string.h>
 #include "header.h"
 
-//Inserção de um meio de transporte
 transporte* criarTransporte(transporte * inicio, int id, int tipo, char localizacao[], float custo, float bat, float aut){
-    //if (!existeGestor(inicio, id)){
         transporte * novo = malloc(sizeof(struct transporte));
         if (novo != NULL) {
             novo->id = id;
@@ -17,7 +15,6 @@ transporte* criarTransporte(transporte * inicio, int id, int tipo, char localiza
             novo->seguinte = inicio;
             return novo;
         }
-    //} else return(inicio);
     return inicio;
 }
 

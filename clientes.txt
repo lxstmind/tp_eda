@@ -1,2 +1,1 @@
-1;marcelo;pass;123123123;morada;10.00
-2;joao;pass;444555666;ipca;15.00
+1;antonio;pass;123123123;ipca;1000.00
