@@ -11,19 +11,9 @@ typedef struct {
     int ano;
 }data;
 
-typedef struct veiculo{
-    int id;
-    int tipo;
-    float custo;
-    float bateria;
-    float distancia;
-    char local[MAX_LOCAL_LENGTH +1];
-    struct veiculo* seguinte; 
-}veiculo;
-
 typedef struct cliente{
     int id;
-    char password[MAX_PASSWORD_LENGTH + 1]; // +1 para o caractere nulo
+    char password[MAX_PASSWORD_LENGTH + 1]; // +1 para o \n
     char nome[MAX_NAME_LENGTH + 1];
     int nif;
     char morada[MAX_MORADA_LENGTH +1];
@@ -62,7 +52,7 @@ void listarClientes(cliente* inicio);
 cliente* lerApenasCliente(int id);
 
 void menuGestor();
-gestor* criarContaGestor(gestor * inicio, int id, char password[], char nome[]); // Inserção de um novo registo de um gestor
+gestor* criarContaGestor(gestor * inicio, int id, char password[], char nome[]);
 void existeGestor(gestor* inicio, int id);
 int verifLoginGestor(gestor* inicio, int id, char password[]);
 void guardarGestor(gestor* inicio);
@@ -77,8 +67,8 @@ void listarPorBateria(transporte* inicio);
 
 void menuClienteLogin();
 void listarApenasCliente(cliente* inicio, int id);
-cliente* removerCliente(cliente* inicio, int id);
-transporte* removerTransporte(transporte* inicio, int id);
+void removerCliente(int idCliente);
+void removerTransporte(char nomeArquivo[], int idTransporte);
 void alterarDadosCliente(cliente* inicio, int id);
 void alterarDadosTransporte(transporte* inicio, int id);
 #endif

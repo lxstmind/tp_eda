@@ -3,34 +3,21 @@
 #include <string.h>
 #include "header.h"
 
-int getId() {
-    FILE *fp_clientes = fopen("clientes.txt", "r");
-    FILE *fp_gestores = fopen("gestores.txt", "r");
-    int id_clientes = 0, id_gestores = 0;
+int getId(char * file_name) {
     char buffer[MAX_LOCAL_LENGTH + MAX_MORADA_LENGTH + MAX_NAME_LENGTH + MAX_PASSWORD_LENGTH + 1]; //tamanho todo da minha linha
-
-    if (fp_clientes) { //verificar se o ficheiro existe
-        //abre o ficheiro de clientes e verifica linha a linha no tamanho dos caracteretes
-        while (fgets(buffer, MAX_LOCAL_LENGTH + MAX_MORADA_LENGTH + MAX_NAME_LENGTH + MAX_PASSWORD_LENGTH + 1, fp_clientes) != NULL) { //fgets pega na string e o atoi converte a string num int
+    FILE *fp = fopen(file_name, "r");
+    int id = 1;
+    if (fp) { //verificar se o ficheiro existe
+    //abre o ficheiro de clientes e verifica linha a linha no tamanho dos caracteretes
+        while (fgets(buffer, MAX_LOCAL_LENGTH + MAX_MORADA_LENGTH + MAX_NAME_LENGTH + MAX_PASSWORD_LENGTH + 1, fp) != NULL) { //fgets pega na string e o atoi converte a string num int
             int current_id = atoi(strtok(buffer, ";")); //pega no id atual que é até ao primeiro ";" só até ao primeiro ;
-            if (current_id > id_clientes) { //verificar os casos das linhas duplicadas (muito raro, quase impossivel só um burro é que fode isso ao por um numero negativo)
-                id_clientes = current_id;
+            if (current_id > id) { //verificar os casos das linhas duplicadas (muito raro, quase impossivel só um burro é que fode isso ao por um numero negativo)
+                id = current_id;
             }
         }
-        fclose(fp_clientes);
+        fclose(fp);
     }
-
-    if (fp_gestores) {
-        while (fgets(buffer, MAX_LOCAL_LENGTH + MAX_MORADA_LENGTH + MAX_NAME_LENGTH + MAX_PASSWORD_LENGTH + 1, fp_gestores) != NULL) {
-            int current_id = atoi(strtok(buffer, ";"));
-            if (current_id > id_gestores) {
-                id_gestores = current_id;
-            }
-        }
-        fclose(fp_gestores);
-    }
-    //compara o id dos clientes com o dos gestores e se for maior ele adiciona 1 ao ultimo id quer seja cliente ou gestor
-    return (id_clientes > id_gestores) ? id_clientes + 1 : id_gestores + 1;
+    return id;
 }
 
 void clear_console(){
@@ -43,7 +30,7 @@ void clear_console(){
 
 void menuCliente(){
     int opcaoCliente = 0;
-    int id = getId();
+    int id = getId("clientes.txt");
     cliente* inicio = lerClientes();
     char password[MAX_PASSWORD_LENGTH + 1];
     int id_received = 0;
@@ -112,7 +99,7 @@ void menuCliente(){
 
 void menuClienteLogin(){
     int opcao=0;
-    int id = getId();
+    int id = getId("clientes.txt");
     int tipo;
     float bat=0;
     float aut=0;
@@ -155,7 +142,7 @@ void menuClienteLogin(){
 void menuGestor(){
     int opcaoGestor = 0;
     gestor* inicio = lerGestores();
-    int id = getId();
+    int id = getId("gestores.txt");
     int id_received = 0;
     char password[MAX_PASSWORD_LENGTH + 1];
     char nome[MAX_NAME_LENGTH + 1];
@@ -208,7 +195,8 @@ void menuGestor(){
 
 void menuGestorLogin(){
     int opcao=0;
-    int id = getId();
+    int id = getId("transportes.txt");
+    int idCliente, idTransporte;
     int tipo;
     char localizacao[MAX_MORADA_LENGTH +1];
     float custo=0;
@@ -263,13 +251,18 @@ void menuGestorLogin(){
             getchar();
 
             case 4:
-            removerCliente(inicioCliente, id);
+            printf("Digite o ID do cliente que deseja remover: ");
+            scanf("%d", &idCliente); // atribui o valor aqui
+            removerCliente(idCliente);
             fflush(stdin);
             getchar();
             break;
 
             case 5:
-            removerTransporte(inicioTransporte, id);
+            printf("Digite o ID do transporte a ser removido: ");
+            scanf("%d", &idTransporte);
+            // chama a função "removerTransporte"
+            removerTransporte("transportes.txt", idTransporte);
             fflush(stdin);
             getchar();
             break;

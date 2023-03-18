@@ -98,7 +98,7 @@ void alterarDadosTransporte(transporte* inicio, int id) {
         if (aux->id == id) {
             printf("Dados atuais:\n");
             printf("ID: %d, Tipo: %d, Localizacao: %s, Custo: %.2f, Bateria: %.2f, Autonomia: %.2f\n", aux->id, aux -> tipo, aux->localizacao, aux->custo, aux->bat, aux->aut);
-            printf("\nDigite o número correspondente à opção que deseja alterar:\n");
+            printf("\nDigite o numero correspondente a opcao que deseja alterar:\n");
             printf("1 - Tipo\n2 - Localizacao\n3 - Custo\n4 - Bateria\n5 - Autonomia\n0 - Sair\n");
 
             scanf("%d", &opcao);
@@ -107,35 +107,35 @@ void alterarDadosTransporte(transporte* inicio, int id) {
                 case 1:
                     printf("Digite o novo tipo: ");
                     scanf("%d", aux->tipo);
-                    printf("Nome alterado com sucesso!\n");
+                    printf("Tipo alterado com sucesso!\n");
                     break;
 
                 case 2:
                     printf("Digite a nova localizacao: ");
                     scanf("%s", aux->localizacao);
-                    printf("Password alterada com sucesso!\n");
+                    printf("Localizacao alterada com sucesso!\n");
                     break;
 
                 case 3:
                     printf("Digite o novo custo: ");
                     scanf("%f", &aux->custo);
-                    printf("NIF alterado com sucesso!\n");
+                    printf("Custo alterado com sucesso!\n");
                     break;
 
                 case 4:
                     printf("Digite a nova bateria: ");
                     scanf("%f", aux->bat);
-                    printf("Morada alterada com sucesso!\n");
+                    printf("Bateria alterada com sucesso!\n");
                     break;
 
                 case 5:
                     printf("Digite a nova autonomia: ");
                     scanf("%f", &aux->aut);
-                    printf("Saldo alterado com sucesso!\n");
+                    printf("Autonomia alterado com sucesso!\n");
                     break;
 
                 case 0:
-                    printf("Saindo...\n");
+                    printf("Voltar atras\n");
                     return;
 
                 default:
@@ -151,25 +151,33 @@ void alterarDadosTransporte(transporte* inicio, int id) {
     }
 }
 
-transporte* removerTransporte(transporte* inicio, int id) {
-    transporte *anterior=inicio, *atual=inicio, *aux;
+void removerTransporte(char nomeArquivo[], int idTransporte) {
+    FILE *arquivo;
+    transporte transporteAtual;
+    long tamanhoTransporte = sizeof(transporteAtual);
+    int encontrado = 0;
 
-    if (atual==NULL) return(NULL);
-    else if (atual->id == id){ // remoção do 1º registo
-    aux = atual->seguinte;
-    free(atual);
-    return(aux);
+    arquivo = fopen(nomeArquivo, "r+b");
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo %s.\n", nomeArquivo);
+        return;
     }
-    else
-    { while ((atual!=NULL)&&(atual->id!=id)) 
-    {anterior = atual;
-    atual = atual->seguinte;
+
+    while (fread(&transporteAtual, tamanhoTransporte, 1, arquivo)) {
+        if (transporteAtual.id == idTransporte) {
+            encontrado = 1;
+            fseek(arquivo, -tamanhoTransporte, SEEK_CUR);
+            transporteAtual.id = -1; // marca o transporte como removido
+            fwrite(&transporteAtual, tamanhoTransporte, 1, arquivo);
+            break;
+        }
     }
-    if (atual==NULL) return(inicio);
-    else
-    {anterior->seguinte = atual->seguinte;
-    free(atual);
-    return(inicio);
+
+    if (encontrado) {
+        printf("Transporte com ID %d removido com sucesso.\n", idTransporte);
+    } else {
+        printf("Transporte com ID %d nao encontrado.\n", idTransporte);
     }
-    }
+
+    fclose(arquivo);
 }

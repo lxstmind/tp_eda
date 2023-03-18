@@ -94,7 +94,7 @@ void alterarDadosCliente(cliente* inicio, int id) {
         if (aux->id == id) {
             printf("Dados atuais:\n");
             printf("ID: %d, Nome: %s, Password: %s, NIF: %d, Morada: %s, Saldo: %.2f\n", aux->id, aux->nome, aux->password, aux->nif, aux->morada, aux->saldo);
-            printf("\nDigite o número correspondente à opção que deseja alterar:\n");
+            printf("\nDigite o numero correspondente a opcaoo que deseja alterar:\n");
             printf("1 - Nome\n2 - Password\n3 - NIF\n4 - Morada\n5 - Saldo\n0 - Sair\n");
 
             scanf("%d", &opcao);
@@ -147,27 +147,29 @@ void alterarDadosCliente(cliente* inicio, int id) {
     }
 }
 
-cliente* removerCliente(cliente* inicio, int id) {
-    cliente *anterior=inicio, *atual=inicio, *aux;
+void removerCliente(int idCliente) {
+    FILE *arquivo;
+    cliente clienteAtual;
+    long tamanhoCliente = sizeof(clienteAtual);
 
-    if (atual==NULL) return(NULL);
-    else if (atual->id == id){ // remoção do 1º registo
-    aux = atual->seguinte;
-    free(atual);
-    return(aux);
+    arquivo = fopen("clientes.txt", "r+b");
+
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo!\n");
+        return;
     }
-    else
-    { while ((atual!=NULL)&&(atual->id!=id)) 
-    {anterior = atual;
-    atual = atual->seguinte;
+
+    while (fread(&clienteAtual, tamanhoCliente, 1, arquivo)) {
+        if (clienteAtual.id == idCliente) {
+            clienteAtual.id = -1; // marca o cliente como removido
+            fseek(arquivo, -tamanhoCliente, SEEK_CUR);
+            fwrite(&clienteAtual, tamanhoCliente, 1, arquivo);
+            printf("Cliente com ID %d removido do arquivo!\n", idCliente);
+            break;
+        }
     }
-    if (atual==NULL) return(inicio);
-    else
-    {anterior->seguinte = atual->seguinte;
-    free(atual);
-    return(inicio);
-    }
-    }
+
+    fclose(arquivo);
 }
 
 void existeCliente(cliente* inicio, int id){

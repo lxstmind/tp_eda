@@ -10,8 +10,6 @@ gestores:
 
 alterar dados (clientes e transportes);
 remover dados (clientes e transportes); (mais ou menos)
-
-binario (?);
 */
 
 int main(){
