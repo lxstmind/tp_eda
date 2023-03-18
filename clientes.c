@@ -164,3 +164,57 @@ void alterarDadosCliente(cliente* inicio, int id) {
 
     printf("Dados do cliente atualizados com sucesso!\n");
 }
+
+void removerCliente(){
+    int idRemover;
+    printf("Informe o ID do cliente a ser removido: ");
+    scanf("%d", &idRemover);
+
+    // Abre o arquivo para leitura
+    FILE* fp = fopen("clientes.txt", "r");
+    if(fp == NULL){
+        printf("Erro ao abrir o arquivo de clientes!\n");
+        return;
+    }
+
+    // Abre um arquivo temporário para escrita
+    FILE* fpTemp = fopen("temp.txt", "w");
+    if(fpTemp == NULL){
+        printf("Erro ao criar arquivo temporário!\n");
+        fclose(fp);
+        return;
+    }
+
+    // Percorre o arquivo de clientes linha por linha
+    char linha[200];
+    int encontrou = 0;
+    while(fgets(linha, 200, fp)){
+        // Cria um novo cliente a partir da linha atual
+        cliente* cli = malloc(sizeof(cliente));
+        sscanf(linha, "%d;%[^;];%[^;];%d;%[^;];%f", &cli->id, cli->password, cli->nome, &cli->nif, cli->morada, &cli->saldo);
+
+        // Se o ID for diferente do ID a ser removido, escreve a linha no arquivo temporário
+        if(cli->id != idRemover){
+            fputs(linha, fpTemp);
+        } else {
+            encontrou = 1;
+            free(cli);
+        }
+    }
+
+    // Fecha os arquivos
+    fclose(fp);
+    fclose(fpTemp);
+
+    // Remove o arquivo antigo
+    remove("clientes.txt");
+
+    // Renomeia o arquivo temporário para o nome original
+    rename("temp.txt", "clientes.txt");
+
+    if(encontrou){
+        printf("Cliente removido com sucesso!\n");
+    } else {
+        printf("Cliente não encontrado!\n");
+    }
+}

@@ -5,7 +5,6 @@
 
 // Inserção de um novo registo de um gestor
 gestor* criarContaGestor(gestor * inicio, int id, char password[], char nome[]){
-    //if (!existeGestor(inicio, id)){
         gestor * novo = malloc(sizeof(struct gestor));
         if (novo != NULL) {
             novo->id = id;
@@ -14,7 +13,6 @@ gestor* criarContaGestor(gestor * inicio, int id, char password[], char nome[]){
             novo->seguinte = inicio;
             return novo;
         }
-    //} else return(inicio);
     return inicio;
 }
 
@@ -56,11 +54,4 @@ gestor* lerGestores(){
     }
 
     return aux;
-}
-
-void existeGestor(gestor* inicio, int id){
-    while(inicio!=NULL){
-        if (inicio->id != id)
-            inicio = inicio->seguinte;
-    }
 }

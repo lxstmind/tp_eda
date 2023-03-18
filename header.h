@@ -40,11 +40,9 @@ typedef struct transporte{
 
 void menu();
 void clear_console();
-int getId();
 
 void menuCliente();
 cliente* criarContaCliente(cliente * inicio, int id, char password[], char nome[], int nif, char morada[], float saldo); // Inserção de um novo registo de um cliente
-void existeCliente(cliente* inicio, int id);
 int verifLoginCliente(cliente* inicio, int id, char password[]);
 void guardarCliente(cliente* inicio);
 cliente* lerClientes();
@@ -53,7 +51,6 @@ cliente* lerApenasCliente(int id);
 
 void menuGestor();
 gestor* criarContaGestor(gestor * inicio, int id, char password[], char nome[]);
-void existeGestor(gestor* inicio, int id);
 int verifLoginGestor(gestor* inicio, int id, char password[]);
 void guardarGestor(gestor* inicio);
 gestor* lerGestores();
@@ -66,14 +63,16 @@ void ordenarPorBateria(transporte* inicio);
 void listarPorBateria(transporte* inicio);
 
 void menuClienteLogin();
-void listarApenasCliente(cliente* inicio, int idLogin);
 void alterarDadosCliente(cliente* inicio, int id);
 void alterarDadosTransporte(transporte* inicio, int id);
-void atualizarDadosCliente(cliente* inicio);
 
 void imprimirCliente(cliente* c);
 cliente* buscarCliente(cliente* inicio, int id);
+
 void alterarDadosTransporte(transporte* inicio, int id);
 transporte* buscarTransporte(transporte* inicio, int id);
 void imprimirTransporte(transporte* c);
+
+void removerTransporte();
+void removerCliente();
 #endif

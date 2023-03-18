@@ -187,3 +187,56 @@ transporte* buscarTransporte(transporte* inicio, int id) {
 void imprimirTransporte(transporte* c) {
     printf("ID: %d, Tipo: %d, Custo: %.2f, Bateria: %.2f, Autonomia: %.2f", c->id, c->tipo, c->custo, c->bat, c->aut);
 }
+
+void removerTransporte(){
+    int idRemover;
+    printf("Informe o ID do transporte a ser removido: ");
+    scanf("%d", &idRemover);
+
+    // Abre o arquivo para leitura
+    FILE* fp = fopen("transportes.txt", "r");
+    if(fp == NULL){
+        printf("Erro ao abrir o arquivo de transportes!\n");
+        return;
+    }
+
+    // Abre um arquivo temporário para escrita
+    FILE* fpTemp = fopen("temp.txt", "w");
+    if(fpTemp == NULL){
+        printf("Erro ao criar arquivo temporário!\n");
+        fclose(fp);
+        return;
+    }
+
+    // Percorre o arquivo de transportes linha por linha
+    char linha[100];
+    int encontrou = 0;
+    while(fgets(linha, 100, fp)){
+        // Lê o ID da linha atual
+        int id;
+        sscanf(linha, "%d;", &id);
+
+        // Se o ID for diferente do ID a ser removido, escreve a linha no arquivo temporário
+        if(id != idRemover){
+            fputs(linha, fpTemp);
+        } else {
+            encontrou = 1;
+        }
+    }
+
+    // Fecha os arquivos
+    fclose(fp);
+    fclose(fpTemp);
+
+    // Remove o arquivo antigo
+    remove("transportes.txt");
+
+    // Renomeia o arquivo temporário para o nome original
+    rename("temp.txt", "transportes.txt");
+
+    if(encontrou){
+        printf("Transporte removido com sucesso!\n");
+    } else {
+        printf("Transporte não encontrado!\n");
+    }
+}

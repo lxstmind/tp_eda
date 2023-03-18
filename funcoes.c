@@ -268,6 +268,9 @@ void menuGestorLogin(){
             break;
 
             case 4:
+            removerTransporte();
+            fflush(stdin);
+            getchar();
             break;
 
             case 5:
@@ -284,6 +287,9 @@ void menuGestorLogin(){
             break;
 
             case 7:
+            removerCliente();
+            fflush(stdin);
+            getchar();
             break;
         }
     } while(opcao!=0);
