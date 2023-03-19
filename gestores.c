@@ -3,7 +3,15 @@
 #include <string.h>
 #include "header.h"
 
-// Inserção de um novo registo de um gestor
+/**
+ * @brief retorna os dados dos gestores para o ponteiro inicio
+ * 
+ * @param inicio ponteiro para o inicio da lista ligada
+ * @param id inteiro que representa o id do gestor
+ * @param password string que representa a password da conta gestor
+ * @param nome string que representa o nome do gestor
+ * @return gestor* ponteiro para o novo nó criado da lista de gestores
+ */
 gestor* criarContaGestor(gestor * inicio, int id, char password[], char nome[]){
         gestor * novo = malloc(sizeof(struct gestor));
         if (novo != NULL) {
@@ -16,6 +24,14 @@ gestor* criarContaGestor(gestor * inicio, int id, char password[], char nome[]){
     return inicio;
 }
 
+/**
+ * @brief percorre a lista de gestores até encontrar um gestor com o mesmo id e senha. se encontrar um gestor correspondente, retorna o seu id, caso contrário, retorna 0
+ * 
+ * @param inicio ponteiro para o inicio da lista ligada
+ * @param id inteiro do id que representa o gestor
+ * @param password string que representa a password da conta de gestor
+ * @return int 
+ */
 int verifLoginGestor(gestor* inicio, int id, char password[]) {
     while (inicio != NULL) {
         if (inicio->id == id && strcmp(inicio->password, password) == 0) {
@@ -26,6 +42,11 @@ int verifLoginGestor(gestor* inicio, int id, char password[]) {
     return 0;
 }
 
+/**
+ * @brief recebe o ponteiro para o inicio de uma lista de gestores e abre o ficheiro em modo de edição e percorre a lista para escrever os dados no ficheiro de texto
+ * 
+ * @param inicio ponteiro para o início de uma lista de gestores a serem salvos no ficheiro de texto
+ */
 void guardarGestor(gestor* inicio){
     FILE* fp;
     fp = fopen("gestores.txt","a");
@@ -36,6 +57,11 @@ void guardarGestor(gestor* inicio){
     }
 }
 
+/**
+ * @brief lê as informações sobre os gestores e retorna um ponteiro para o inicio da lista de gestores lidos. depois cria uma nova conta de gestor na lista
+ * 
+ * @return gestor* ponteiro para o início da lista de gestores criada a partir do ficheiro de texto
+ */
 gestor* lerGestores(){
     FILE* fp;
     fp = fopen("gestores.txt","r");
@@ -56,6 +82,12 @@ gestor* lerGestores(){
     return aux;
 }
 
+/**
+ * @brief permite ao gestor a alteração dos dados dos gestores
+ * 
+ * @param inicio ponteiro para o início da lista encadeada de gestores
+ * @param id id do gestor a ser alterado
+ */
 void alterarDadosGestor(gestor* inicio, int id) {
     gestor* gestorAtual = buscarGestor(inicio, id);
     if (gestorAtual == NULL) {
@@ -106,6 +138,13 @@ void alterarDadosGestor(gestor* inicio, int id) {
     printf("Dados do gestor atualizados com sucesso!\n");
 }
 
+/**
+ * @brief buscar um gestor com um determinado ID em uma lista encadeada de gestores
+ * 
+ * @param inicio ponteiro para o início da lista encadeada de gestores
+ * @param id ID do gestor a ser buscado
+ * @return gestor* ponteiro para o gestor com o ID correspondente, caso ele seja encontrado na lista
+ */
 gestor* buscarGestor(gestor* inicio, int id) {
     gestor* aux = inicio;
 
@@ -120,10 +159,19 @@ gestor* buscarGestor(gestor* inicio, int id) {
     return NULL;
 }
 
+/**
+ * @brief recebe um ponteiro para uma estrutura gestor e imprime as informações desse gestor na consola
+ * 
+ * @param g ponteiro que aponta para um único gestor que será impresso na função
+ */
 void imprimirGestor(gestor* g) {
     printf("ID: %d, Nome: %s, Password: %s\n", g->id, g->nome, g->password);
 }
 
+/**
+ * @brief recebe um ID para remover o gestor de um ficheiro de texto
+ * 
+ */
 void removerGestor(){
     int idRemover;
     printf("Informe o ID do gestor a ser removido: ");

@@ -3,7 +3,18 @@
 #include <string.h>
 #include "header.h"
 
-//retorna os dados dos clientes para o ponteiro inicio
+/**
+ * @brief retorna os dados dos clientes para o ponteiro inicio
+ * 
+ * @param inicio ponteiro para o inicio da lista ligada
+ * @param id inteiro do id que representa o novo cliente
+ * @param password string que representa a password da conta cliente
+ * @param nome string que representa o nome do cliente
+ * @param nif inteiro que representa o nif do cliente
+ * @param morada string que representa a morada do cliente
+ * @param saldo numero que representa o saldo da conta do cliente
+ * @return cliente* ponteiro para o novo nó criado da lista de clientes
+ */
 cliente* criarContaCliente(cliente * inicio, int id, char password[], char nome[], int nif, char morada[], float saldo){
         cliente * novo = malloc(sizeof(struct cliente));
         if (novo != NULL) {
@@ -19,7 +30,14 @@ cliente* criarContaCliente(cliente * inicio, int id, char password[], char nome[
     return(inicio);
 }
 
-//percorre a lista de clientes até encontrar um cliente com o mesmo id e senha. se encontrar um cliente correspondente, retorna o seu id, caso contrário, retorna 0.
+/**
+ * @brief percorre a lista de clientes até encontrar um cliente com o mesmo id e senha. se encontrar um cliente correspondente, retorna o seu id, caso contrário, retorna 0
+ * 
+ * @param inicio ponteiro para o inicio da lista ligada
+ * @param id inteiro do id que representa o cliente
+ * @param password string que representa a password da conta cliente
+ * @return int 
+ */
 int verifLoginCliente(cliente* inicio, int id, char password[]) {
     while (inicio != NULL) {
         if (inicio->id == id && strcmp(inicio->password, password) == 0) {
@@ -30,7 +48,11 @@ int verifLoginCliente(cliente* inicio, int id, char password[]) {
     return 0;
 }
 
-//recebe o ponteiro para o inicio de uma lista de clientes e abre o ficheiro em modo de edição e percorre a lista para escrever os dados no txt
+/**
+ * @brief recebe o ponteiro para o inicio de uma lista de clientes e abre o ficheiro em modo de edição e percorre a lista para escrever os dados no ficheiro de texto
+ * 
+ * @param inicio ponteiro para o início de uma lista de clientes a serem salvos no ficheiro de texto
+ */
 void guardarCliente(cliente* inicio){
     FILE* fp;
     fp = fopen("clientes.txt","a");
@@ -41,7 +63,11 @@ void guardarCliente(cliente* inicio){
     }
 }
 
-//lê as informações sobre os clientes e retorna um ponteiro para o inicio da lista de clientes lidos. depois cria uma nova conta de cliente na lista.
+/**
+ * @brief lê as informações sobre os clientes e retorna um ponteiro para o inicio da lista de clientes lidos. depois cria uma nova conta de cliente na lista
+ * 
+ * @return cliente* ponteiro para o início da lista de clientes criada a partir do ficheiro de texto
+ */
 cliente* lerClientes() {
     FILE* fp;
     fp = fopen("clientes.txt", "r");
@@ -62,7 +88,11 @@ cliente* lerClientes() {
     return inicio;
 }
 
-// listar na consola o conteúdo da lista ligada
+/**
+ * @brief listar na consola o conteúdo da lista ligada
+ * 
+ * @param inicio ponteiro para o início da lista encadeada de clientes
+ */
 void listarClientes(cliente* inicio){
     while (inicio != NULL){
         printf("ID: %d, Nome: %s, Password: %s, NIF: %d, Morada: %s, Saldo: %.2f\n", inicio->id, inicio->nome, inicio->password, inicio->nif, inicio->morada, inicio->saldo);
@@ -70,6 +100,12 @@ void listarClientes(cliente* inicio){
     }
 }
 
+/**
+ * @brief permite ao gestor e aos clientes a alteração dos dados dos clientes
+ * 
+ * @param inicio ponteiro para o início da lista encadeada de clientes
+ * @param id id do cliente a ser alterado
+ */
 void alterarDadosCliente(cliente* inicio, int id) {
     cliente* clienteAtual = buscarCliente(inicio, id);
     if (clienteAtual == NULL) {
@@ -147,6 +183,13 @@ void alterarDadosCliente(cliente* inicio, int id) {
     printf("Dados do cliente atualizados com sucesso!\n");
 }
 
+/**
+ * @brief buscar um cliente com um determinado ID em uma lista encadeada de clientes
+ * 
+ * @param inicio ponteiro para o início da lista encadeada de clientes
+ * @param id ID do cliente a ser buscado
+ * @return cliente* ponteiro para o cliente com o ID correspondente, caso ele seja encontrado na lista
+ */
 cliente* buscarCliente(cliente* inicio, int id) {
     cliente* aux = inicio;
 
@@ -161,10 +204,19 @@ cliente* buscarCliente(cliente* inicio, int id) {
     return NULL;
 }
 
+/**
+ * @brief recebe um ponteiro para uma estrutura cliente e imprime as informações desse cliente na consola
+ * 
+ * @param c ponteiro que aponta para um único cliente que será impresso na função
+ */
 void imprimirCliente(cliente* c) {
     printf("ID: %d, Nome: %s, Password: %s, NIF: %d, Morada: %s, Saldo: %.2f\n", c->id, c->nome, c->password, c->nif, c->morada, c->saldo);
 }
 
+/**
+ * @brief recebe um ID do gestor para remover o cliente de um ficheiro de texto
+ * 
+ */
 void removerCliente(){
     int idRemover;
     printf("Informe o ID do cliente a ser removido: ");

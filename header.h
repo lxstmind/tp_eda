@@ -46,7 +46,6 @@ int verifLoginCliente(cliente* inicio, int id, char password[]);
 void guardarCliente(cliente* inicio);
 cliente* lerClientes();
 void listarClientes(cliente* inicio);
-cliente* lerApenasCliente(int id);
 void menuGestor();
 gestor* criarContaGestor(gestor * inicio, int id, char password[], char nome[]);
 int verifLoginGestor(gestor* inicio, int id, char password[]);
