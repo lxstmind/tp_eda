@@ -30,7 +30,7 @@ gestor* criarContaGestor(gestor * inicio, int id, char password[], char nome[]){
  * @param inicio ponteiro para o inicio da lista ligada
  * @param id inteiro do id que representa o gestor
  * @param password string que representa a password da conta de gestor
- * @return int 
+ * @return int inteiro que representa o ID do gestor correspondente, se encontrado, caso contrário, 0
  */
 int verifLoginGestor(gestor* inicio, int id, char password[]) {
     while (inicio != NULL) {

@@ -36,7 +36,7 @@ cliente* criarContaCliente(cliente * inicio, int id, char password[], char nome[
  * @param inicio ponteiro para o inicio da lista ligada
  * @param id inteiro do id que representa o cliente
  * @param password string que representa a password da conta cliente
- * @return int 
+ * @return int inteiro que representa o ID do cliente correspondente, se encontrado, caso contrário, 0
  */
 int verifLoginCliente(cliente* inicio, int id, char password[]) {
     while (inicio != NULL) {
