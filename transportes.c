@@ -184,8 +184,8 @@ transporte* buscarTransporte(transporte* inicio, int id) {
     return NULL;
 }
 
-void imprimirTransporte(transporte* c) {
-    printf("ID: %d, Tipo: %d, Custo: %.2f, Bateria: %.2f, Autonomia: %.2f", c->id, c->tipo, c->custo, c->bat, c->aut);
+void imprimirTransporte(transporte* t) {
+    printf("ID: %d, Tipo: %d, Custo: %.2f, Bateria: %.2f, Autonomia: %.2f", t->id, t->tipo, t->custo, t->bat, t->aut);
 }
 
 void removerTransporte(){

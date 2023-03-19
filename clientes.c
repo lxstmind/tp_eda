@@ -70,24 +70,6 @@ void listarClientes(cliente* inicio){
     }
 }
 
-cliente* buscarCliente(cliente* inicio, int id) {
-    cliente* aux = inicio;
-
-    while (aux != NULL) {
-        if (aux->id == id) {
-            return aux;
-        }
-        aux = aux->seguinte;
-    }
-
-    // se chegou aqui, o cliente não foi encontrado
-    return NULL;
-}
-
-void imprimirCliente(cliente* c) {
-    printf("ID: %d, Nome: %s, Password: %s, NIF: %d, Morada: %s, Saldo: %.2f\n", c->id, c->nome, c->password, c->nif, c->morada, c->saldo);
-}
-
 void alterarDadosCliente(cliente* inicio, int id) {
     cliente* clienteAtual = buscarCliente(inicio, id);
     if (clienteAtual == NULL) {
@@ -163,6 +145,24 @@ void alterarDadosCliente(cliente* inicio, int id) {
     fclose(fp);
 
     printf("Dados do cliente atualizados com sucesso!\n");
+}
+
+cliente* buscarCliente(cliente* inicio, int id) {
+    cliente* aux = inicio;
+
+    while (aux != NULL) {
+        if (aux->id == id) {
+            return aux;
+        }
+        aux = aux->seguinte;
+    }
+
+    // se chegou aqui, o cliente não foi encontrado
+    return NULL;
+}
+
+void imprimirCliente(cliente* c) {
+    printf("ID: %d, Nome: %s, Password: %s, NIF: %d, Morada: %s, Saldo: %.2f\n", c->id, c->nome, c->password, c->nif, c->morada, c->saldo);
 }
 
 void removerCliente(){

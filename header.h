@@ -40,39 +40,37 @@ typedef struct transporte{
 
 void menu();
 void clear_console();
-
 void menuCliente();
-cliente* criarContaCliente(cliente * inicio, int id, char password[], char nome[], int nif, char morada[], float saldo); // Inserção de um novo registo de um cliente
+cliente* criarContaCliente(cliente * inicio, int id, char password[], char nome[], int nif, char morada[], float saldo);
 int verifLoginCliente(cliente* inicio, int id, char password[]);
 void guardarCliente(cliente* inicio);
 cliente* lerClientes();
 void listarClientes(cliente* inicio);
 cliente* lerApenasCliente(int id);
-
 void menuGestor();
 gestor* criarContaGestor(gestor * inicio, int id, char password[], char nome[]);
 int verifLoginGestor(gestor* inicio, int id, char password[]);
 void guardarGestor(gestor* inicio);
 gestor* lerGestores();
-
 void menuGestorLogin();
 transporte* criarTransporte(transporte * inicio, int id, int tipo, char localizacao[], float custo, float bat, float aut);
 void guardarTransporte(transporte* inicio);
 transporte* lerTransportes();
 void ordenarPorBateria(transporte* inicio);
 void listarPorBateria(transporte* inicio);
-
 void menuClienteLogin();
 void alterarDadosCliente(cliente* inicio, int id);
 void alterarDadosTransporte(transporte* inicio, int id);
-
 void imprimirCliente(cliente* c);
 cliente* buscarCliente(cliente* inicio, int id);
-
 void alterarDadosTransporte(transporte* inicio, int id);
 transporte* buscarTransporte(transporte* inicio, int id);
-void imprimirTransporte(transporte* c);
-
+void imprimirTransporte(transporte* t);
 void removerTransporte();
 void removerCliente();
+void alterarDadosGestor(gestor* inicio, int id);
+gestor* buscarGestor(gestor* inicio, int id);
+void imprimirGestor(gestor* g);
+void removerGestor();
+
 #endif

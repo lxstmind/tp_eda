@@ -217,6 +217,7 @@ void menuGestorLogin(){
     float aut=0;
     transporte* inicioTransporte = lerTransportes();
     cliente* inicioCliente = lerClientes();
+    gestor* inicioGestor = lerGestores();
 
     do {
         printf("M E N U   G E S T O R   L O G I N\n\n");
@@ -227,6 +228,8 @@ void menuGestorLogin(){
         printf("5 Listar clientes\n");
         printf("6 Alterar dados de cliente\n");
         printf("7 Remover cliente\n");
+        printf("8 Alterar dados de gestor\n");
+        printf("9 Remover gestor\n");
         printf("0 Voltar atras\n");
         scanf("%d", &opcao);
 
@@ -288,6 +291,20 @@ void menuGestorLogin(){
 
             case 7:
             removerCliente();
+            fflush(stdin);
+            getchar();
+            break;
+
+            case 8:
+            printf("Qual e o ID do gestor que pretende alterar os dados?\n");
+            scanf("%d", &idLogin);
+            alterarDadosGestor(inicioGestor, idLogin);
+            fflush(stdin);
+            getchar();
+            break;
+
+            case 9:
+            removerGestor();
             fflush(stdin);
             getchar();
             break;
