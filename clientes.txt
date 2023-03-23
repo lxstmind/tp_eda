@@ -1,0 +1,2 @@
+1;marcelo;pass;123123123;rua.ipca.barcelos;25.00
+2;david;123;456456456;rua.ipca.guimaraes;5.00

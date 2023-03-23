@@ -3,23 +3,6 @@
 #include <string.h>
 #include "header.h"
 
-int getId(char * file_name) {
-    char buffer[MAX_LOCAL_LENGTH + MAX_MORADA_LENGTH + MAX_NAME_LENGTH + MAX_PASSWORD_LENGTH + 1]; //tamanho todo da minha linha
-    FILE *fp = fopen(file_name, "r");
-    int id = 1;
-    if (fp) { //verificar se o ficheiro existe
-    //abre o ficheiro de clientes e verifica linha a linha no tamanho dos caracteretes
-        while (fgets(buffer, MAX_LOCAL_LENGTH + MAX_MORADA_LENGTH + MAX_NAME_LENGTH + MAX_PASSWORD_LENGTH + 1, fp) != NULL) { //fgets pega na string e o atoi converte a string num int
-            int current_id = atoi(strtok(buffer, ";")); //pega no id atual que é até ao primeiro ";" só até ao primeiro ;
-            if (current_id > id) { //verificar os casos das linhas duplicadas
-                id = current_id;
-            }
-        }
-        fclose(fp);
-    }
-    return id;
-}
-
 void clear_console(){
      system("@cls||clear");
 }
@@ -30,7 +13,8 @@ void clear_console(){
 
 void menuCliente(){
     int opcaoCliente = 0;
-    int id = getId("clientes.txt");
+    cliente* inicioID = NULL;
+    int id = atribuirIdCliente(inicioID);
     cliente* inicio = lerClientes();
     char password[MAX_PASSWORD_LENGTH + 1];
     int id_received = 0;
@@ -39,6 +23,7 @@ void menuCliente(){
     int nif;
     float saldo=0;
     do{
+    clear_console();
     printf("M E N U   C L I E N T E\n\n");
     printf("1 Iniciar Sessao\n");
     printf("2 Criar Conta\n");
@@ -88,18 +73,20 @@ void menuCliente(){
             } while (saldo <= 0);
 
         printf("Guarde o seu ID para utilizar no inicio da sua proxima sessao: %d\n", id);
-
+        fflush(stdin);
+        printf("Pressione qualquer tecla para continuar.");
+        getchar();
         inicio=criarContaCliente(inicio, id++, password, nome, nif, morada, saldo);
         guardarCliente(inicio);
         break;
 	    }
-        //clear_console();
         } while (opcaoCliente != 0);
 }
 
 void menuClienteLogin(){
     int opcao=0, idLogin;
-    int id = getId("clientes.txt");
+    cliente *inicioID = NULL;
+    int id = atribuirIdCliente(inicioID);
     int tipo;
     float bat=0;
     float aut=0;
@@ -118,6 +105,7 @@ void menuClienteLogin(){
     }
 
     do{
+        clear_console();
         printf("M E N U   C L I E N T E   L O G I N\n\n");
         printf("1 Ver dados da conta\n");
         printf("2 Alterar dados da conta\n");
@@ -154,17 +142,19 @@ void menuClienteLogin(){
 
 void menuGestor(){
     int opcaoGestor = 0;
+    gestor *inicioID = NULL;
+    int id = atribuirIdGestores(inicioID);
     gestor* inicio = lerGestores();
-    int id = getId("gestores.txt");
     int id_received = 0;
     char password[MAX_PASSWORD_LENGTH + 1];
     char nome[MAX_NAME_LENGTH + 1];
     do {
-    printf("M E N U   G E S T O R\n\n");
-    printf("1 Iniciar Sessao\n");
-    printf("2 Criar Conta\n");
-    printf("0 Voltar atras\n");
-    scanf("%d", &opcaoGestor);
+        clear_console();
+        printf("M E N U   G E S T O R\n\n");
+        printf("1 Iniciar Sessao\n");
+        printf("2 Criar Conta\n");
+        printf("0 Voltar atras\n");
+        scanf("%d", &opcaoGestor);
 
     switch(opcaoGestor){
         case 1:
@@ -188,7 +178,9 @@ void menuGestor(){
         printf("Qual e a sua password?\n");
         scanf("%31s", password);
         printf("Guarde o seu ID para utilizar no inicio da sua proxima sessao: %d\n", id);
-
+        fflush(stdin);
+        printf("Pressione qualquer tecla para continuar.");
+        getchar();
         inicio=criarContaGestor(inicio, id++, password, nome);
         guardarGestor(inicio);
 
@@ -202,13 +194,13 @@ void menuGestor(){
     }
     break;
     }
-    //clear_console();
     } while(opcaoGestor!=0);
 }
 
 void menuGestorLogin(){
     int opcao=0;
-    int id = getId("transportes.txt");
+    transporte *inicioID = NULL;
+    int id = atribuirIdTransportes(inicioID);
     int idCliente, idTransporte, idLogin;
     int tipo;
     char localizacao[MAX_MORADA_LENGTH +1];
@@ -220,6 +212,7 @@ void menuGestorLogin(){
     gestor* inicioGestor = lerGestores();
 
     do {
+        clear_console();
         printf("M E N U   G E S T O R   L O G I N\n\n");
         printf("1 Adicionar transporte\n");
         printf("2 Listar transportes\n");
@@ -319,6 +312,7 @@ void menuGestorLogin(){
 void menu(){
 	int opcaoMenu = 0;
     do {
+        clear_console();
         printf("M E N U\n\n");
         printf("1 Seguir como cliente\n");
         printf("2 Seguir como gestor\n");

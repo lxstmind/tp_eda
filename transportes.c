@@ -4,6 +4,24 @@
 #include "header.h"
 
 /**
+ * @brief id do proximo transporte registado
+ * 
+ * @param inicio ponteiro para o inicio da lista ligada
+ * @return int inteiro do id que representa o proximo transporte
+ */
+int atribuirIdTransportes(transporte * inicio){
+    while (inicio != NULL) {
+        if (inicio->seguinte == NULL) {
+            return inicio->id + 1;
+        }
+
+        inicio = inicio->seguinte;
+    }
+
+    return 1;
+}
+
+/**
  * @brief função para criar transporte
  * 
  * @param inicio ponteiro para o inicio da lista ligada

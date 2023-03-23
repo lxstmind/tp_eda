@@ -4,6 +4,24 @@
 #include "header.h"
 
 /**
+ * @brief id do proximo cliente registado
+ * 
+ * @param inicio ponteiro para o inicio da lista ligada
+ * @return int inteiro do id que representa o proximo cliente
+ */
+int atribuirIdCliente(cliente * inicio){
+    while (inicio != NULL) {
+        if (inicio->seguinte == NULL) {
+            return inicio->id + 1;
+        }
+
+        inicio = inicio->seguinte;
+    }
+
+    return 1;
+}
+
+/**
  * @brief retorna os dados dos clientes para o ponteiro inicio
  * 
  * @param inicio ponteiro para o inicio da lista ligada

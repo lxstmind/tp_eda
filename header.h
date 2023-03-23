@@ -71,5 +71,8 @@ void alterarDadosGestor(gestor* inicio, int id);
 gestor* buscarGestor(gestor* inicio, int id);
 void imprimirGestor(gestor* g);
 void removerGestor();
+int atribuirIdCliente(cliente * inicio);
+int atribuirIdGestores(gestor * inicio);
+int atribuirIdTransportes(transporte * inicio);
 
 #endif
