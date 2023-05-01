@@ -4,24 +4,6 @@
 #include "header.h"
 
 /**
- * @brief id do proximo transporte registado
- * 
- * @param inicio ponteiro para o inicio da lista ligada
- * @return int inteiro do id que representa o proximo transporte
- */
-int atribuirIdTransportes(transporte * inicio){
-    while (inicio != NULL) {
-        if (inicio->seguinte == NULL) {
-            return inicio->id + 1;
-        }
-
-        inicio = inicio->seguinte;
-    }
-
-    return 1;
-}
-
-/**
  * @brief função para criar transporte
  * 
  * @param inicio ponteiro para o inicio da lista ligada
@@ -90,18 +72,18 @@ transporte* lerTransportes(){
 }
 
 /**
- * @brief ordena a lista ligada de transportes em ordem decrescente de bateria
+ * @brief ordena a lista ligada de transportes em ordem decrescente de autonomia
  * 
  * @param inicio  ponteiro para o início da lista encadeada de transportes a ser ordenada
  */
-void ordenarPorBateria(transporte* inicio) { //utilizo o bubble sort para percorrer a lista ligada trocando a ordem. 
+void ordenarPorAutonomia(transporte* inicio) {
     int trocado = 1;
     while (trocado) {
         trocado = 0;
         transporte* anterior = NULL;
         transporte* atual = inicio;
         while (atual->seguinte != NULL) {
-            if (atual->bat < atual->seguinte->bat) { //se isto for verdadeira, troca a ordem
+            if (atual->aut < atual->seguinte->aut) { // trocar a ordem se a autonomia for menor
                 transporte* proximo = atual->seguinte;
                 atual->seguinte = proximo->seguinte;
                 proximo->seguinte = atual;
@@ -120,20 +102,78 @@ void ordenarPorBateria(transporte* inicio) { //utilizo o bubble sort para percor
     }
 }
 
+
 /**
- * @brief listar na consola os veículos por ordem de bateria
+ * @brief listar na consola os veículos por ordem de autonomia
  * 
  * @param inicio ponteiro para o início da lista encadeada de transportes
  */
-void listarPorBateria(transporte* inicio) {
-    if (inicio == NULL) {//verificação se a lista está vazia
+void listarPorAutonomia(transporte* inicio) {
+    if (inicio == NULL) {
         printf("Nenhum transporte registado.\n");
         return;
     }
-    ordenarPorBateria(inicio);//percorre a lista de transportes e imprime os dados de cada veículo
-    while (inicio != NULL){
+    ordenarPorAutonomia(inicio); // ordenar por autonomia
+    while (inicio != NULL) {
         printf("ID: %d, Tipo: %d, Localizacao: %s, Custo: %.2f, Bateria: %.2f, Autonomia: %.2f\n", inicio->id, inicio->tipo, inicio->localizacao, inicio->custo, inicio->bat, inicio->aut);
         inicio = inicio->seguinte;
+    }
+}
+/**
+ * @brief ordena a lista ligada de transportes em ordem de localização dos transportes
+ * 
+ * @param inicio ponteiro para o inicio da lista ligada de transportes
+ * @param localizacao localização a ser verificada para ordenação dos veículos
+ */
+void ordenarPorLocalizacao(transporte* inicio, char* localizacao) {
+    int trocado = 1;
+    while (trocado) {
+        trocado = 0;
+        transporte* anterior = NULL;
+        transporte* atual = inicio;
+        while (atual->seguinte != NULL) {
+            if (strcmp(atual->localizacao, localizacao) == 0 && atual->aut < atual->seguinte->aut) {
+                transporte* proximo = atual->seguinte;
+                if (strcmp(proximo->localizacao, localizacao) == 0) {
+                    atual->seguinte = proximo->seguinte;
+                    proximo->seguinte = atual;
+                    if (anterior != NULL) {
+                        anterior->seguinte = proximo;
+                    } else {
+                        inicio = proximo;
+                    }
+                    anterior = proximo;
+                    trocado = 1;
+                } else {
+                    anterior = atual;
+                    atual = atual->seguinte;
+                }
+            } else {
+                anterior = atual;
+                atual = atual->seguinte;
+            }
+        }
+    }
+}
+
+/**
+ * @brief listar na consola os veículos por ordem de localização
+ * 
+ * @param inicio ponteiro para o incio da lista ligada de transportes
+ * @param localizacao localização a ser verificada para ordenação dos veículos
+ */
+void listarPorLocalizacao(transporte* inicio, char* localizacao) {
+    if (inicio == NULL) {
+        printf("Nenhum transporte registado.\n");
+        return;
+    }
+    ordenarPorLocalizacao(inicio, localizacao);
+    transporte* atual = inicio;
+    while (atual != NULL) {
+        if (strcmp(atual->localizacao, localizacao) == 0) {
+            printf("ID: %d, Tipo: %d, Localizacao: %s, Custo: %.2f, Bateria: %.2f, Autonomia: %.2f\n", atual->id, atual->tipo, atual->localizacao, atual->custo, atual->bat, atual->aut);
+        }
+        atual = atual->seguinte;
     }
 }
 

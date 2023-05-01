@@ -3,8 +3,25 @@
 #include <string.h>
 #include "header.h"
 
+int getId(char * file_name) {
+    char buffer[MAX_LOCAL_LENGTH + MAX_MORADA_LENGTH + MAX_NAME_LENGTH + MAX_PASSWORD_LENGTH + 1]; //tamanho todo da minha linha
+    FILE *fp = fopen(file_name, "r");
+    int id = 1;
+    if (fp) { //verificar se o ficheiro existe
+    //abre o ficheiro de clientes e verifica linha a linha no tamanho dos caracteretes
+        while (fgets(buffer, MAX_LOCAL_LENGTH + MAX_MORADA_LENGTH + MAX_NAME_LENGTH + MAX_PASSWORD_LENGTH + 1, fp) != NULL) { //fgets pega na string e o atoi converte a string num int
+            int current_id = atoi(strtok(buffer, ";")); //pega no id atual que é até ao primeiro ";" só até ao primeiro ; (atoi converte de string para o inteiro)
+            if (current_id > id) { //verificar os casos das linhas duplicadas
+                id = current_id;
+            }
+        }
+        fclose(fp);
+    }
+    return id;
+}
+
 void clear_console(){
-     system("@cls||clear");
+    system("@cls||clear");
 }
 
 
@@ -13,8 +30,7 @@ void clear_console(){
 
 void menuCliente(){
     int opcaoCliente = 0;
-    cliente* inicioID = NULL;
-    int id = atribuirIdCliente(inicioID);
+    int id = getId("clientes.txt");
     cliente* inicio = lerClientes();
     char password[MAX_PASSWORD_LENGTH + 1];
     int id_received = 0;
@@ -23,73 +39,73 @@ void menuCliente(){
     int nif;
     float saldo=0;
     do{
-    clear_console();
-    printf("M E N U   C L I E N T E\n\n");
-    printf("1 Iniciar Sessao\n");
-    printf("2 Criar Conta\n");
-    printf("0 Voltar atras\n");
-    scanf("%d", &opcaoCliente);
+        clear_console();
+        printf("M E N U   C L I E N T E\n\n");
+        printf("1 Iniciar Sessao\n");
+        printf("2 Criar Conta\n");
+        printf("0 Voltar atras\n");
+        scanf("%d", &opcaoCliente);
 
-    switch(opcaoCliente){
-        case 1:
-		printf("Introduza o seu ID:\n");
-        scanf("%d", &id_received);
-        printf("Introduza a sua password:\n");
-        scanf("%s", password);
+        switch(opcaoCliente){
+            case 1:
+            printf("Introduza o seu ID:\n");
+            scanf("%d", &id_received);
+            printf("Introduza a sua password:\n");
+            scanf("%s", password);
 
-        if (inicio != NULL && verifLoginCliente(inicio, id_received, password) != 0 ){
-            menuClienteLogin();
-        } else {
-            printf("ID ou password incorreto. Tente novamente.\n");
-        }
-        printf("%d, %s", id_received, password);
-        break;
-	
-        case 2:
-        printf("Qual e o teu nome?\n");
-        fflush(stdin);
-        scanf("%[^\n]", nome);
-        //Loop para garantir que o nif tem 9 numeros
-            do {
-                printf("Qual e o teu NIF?\n");
-                scanf("%d", &nif);
-
-            if (nif <= 0 || nif < 100000000 || nif > 999999999) {
-                printf("Erro: o NIF deve ser um numero positivo e ter 9 digitos.\n");
+            if (inicio != NULL && verifLoginCliente(inicio, id_received, password) != 0 ){
+                menuClienteLogin();
+            } else {
+                printf("ID ou password incorreto. Tente novamente.\n");
             }
-            } while (nif <= 0 || nif < 100000000 || nif > 999999999);
-        printf("Qual e a tua morada?\n");
-        scanf("%63s", morada);
-        printf("Qual e a sua password?\n");
-        scanf("%31s", password);
-        //Loop par garantir que o dinheiro e positivo
-            do {
-                printf("Quanto dinheiro deseja depositar na sua conta?\n");
-                scanf("%f", &saldo);
+            printf("%d, %s", id_received, password);
+            break;
+        
+            case 2:
+            printf("Qual e o teu nome?\n");
+            fflush(stdin);
+            scanf("%[^\n]", nome);
+            //Loop para garantir que o nif tem 9 numeros
+                do {
+                    printf("Qual e o teu NIF?\n");
+                    scanf("%d", &nif);
 
-            if (saldo <= 0) {
-                printf("Erro: o saldo deve ser positivo.\n");
+                if (nif <= 0 || nif < 100000000 || nif > 999999999) {
+                    printf("Erro: o NIF deve ser um numero positivo e ter 9 digitos.\n");
+                }
+                } while (nif <= 0 || nif < 100000000 || nif > 999999999);
+            printf("Qual e a tua morada?\n");
+            scanf("%63s", morada);
+            printf("Qual e a sua password?\n");
+            scanf("%31s", password);
+            //Loop par garantir que o dinheiro e positivo
+                do {
+                    printf("Quanto dinheiro deseja depositar na sua conta?\n");
+                    scanf("%f", &saldo);
+
+                if (saldo <= 0) {
+                    printf("Erro: o saldo deve ser positivo.\n");
+                }
+                } while (saldo <= 0);
+
+            printf("Guarde o seu ID para utilizar no inicio da sua proxima sessao: %d\n", id);
+            fflush(stdin);
+            printf("Pressione qualquer tecla para continuar.");
+            getchar();
+            inicio=criarContaCliente(inicio, id++, password, nome, nif, morada, saldo);
+            guardarCliente(inicio);
+            break;
             }
-            } while (saldo <= 0);
-
-        printf("Guarde o seu ID para utilizar no inicio da sua proxima sessao: %d\n", id);
-        fflush(stdin);
-        printf("Pressione qualquer tecla para continuar.");
-        getchar();
-        inicio=criarContaCliente(inicio, id++, password, nome, nif, morada, saldo);
-        guardarCliente(inicio);
-        break;
-	    }
-        } while (opcaoCliente != 0);
+            } while (opcaoCliente != 0);
 }
 
 void menuClienteLogin(){
     int opcao=0, idLogin;
-    cliente *inicioID = NULL;
-    int id = atribuirIdCliente(inicioID);
+    int id = getId("clientes.txt");
     int tipo;
     float bat=0;
     float aut=0;
+    char localizacao[MAX_MORADA_LENGTH +1];
     cliente* inicioCliente = lerClientes();
     transporte* inicioTransporte = lerTransportes();
 
@@ -109,27 +125,35 @@ void menuClienteLogin(){
         printf("M E N U   C L I E N T E   L O G I N\n\n");
         printf("1 Ver dados da conta\n");
         printf("2 Alterar dados da conta\n");
-        printf("3 Listar transportes\n");
+        printf("3 Listar todos os transportes disponiveis\n");
+        printf("4 Listar os transportes disponiveis por localizacao\n");
         printf("0 Voltar atras\n");
         scanf("%d", &opcao);
 
         switch(opcao){
             case 1:
-                imprimirCliente(clienteLogado);
-                fflush(stdin);
-                getchar();
-                break;
+            imprimirCliente(clienteLogado);
+            fflush(stdin);
+            getchar();
+            break;
             case 2:
-                alterarDadosCliente(inicioCliente, idLogin);
-                fflush(stdin);
-                getchar();
-                break;
+            alterarDadosCliente(inicioCliente, idLogin);
+            fflush(stdin);
+            getchar();
+            break;
             case 3:
-                printf("Tenha atencao que o tipo 1 e trotinete e o tipo 2 e bicicleta.\n");
-                listarPorBateria(inicioTransporte);
-                fflush(stdin);
-                getchar();
-                break;
+            printf("Tenha atencao que o tipo 1 e trotinete e o tipo 2 e bicicleta.\n");
+            listarPorAutonomia(inicioTransporte);
+            fflush(stdin);
+            getchar();
+            break;
+            case 4:
+            printf("Qual e a localizacao que deseja ver os transportes disponiveis?\n");
+            scanf("%31s", &localizacao);
+            listarPorLocalizacao(inicioTransporte, localizacao);
+            fflush(stdin);
+            getchar();
+            break;
         }
 
     } while(opcao!=0);
@@ -142,9 +166,8 @@ void menuClienteLogin(){
 
 void menuGestor(){
     int opcaoGestor = 0;
-    gestor *inicioID = NULL;
-    int id = atribuirIdGestores(inicioID);
     gestor* inicio = lerGestores();
+    int id = getId("gestores.txt");
     int id_received = 0;
     char password[MAX_PASSWORD_LENGTH + 1];
     char nome[MAX_NAME_LENGTH + 1];
@@ -156,51 +179,50 @@ void menuGestor(){
         printf("0 Voltar atras\n");
         scanf("%d", &opcaoGestor);
 
-    switch(opcaoGestor){
-        case 1:
-        printf("Introduza o seu ID:\n");
-        scanf("%d", &id_received);
-        printf("Introduza a sua password:\n");
-        scanf("%s", password);
+        switch(opcaoGestor){
+            case 1:
+            printf("Introduza o seu ID:\n");
+            scanf("%d", &id_received);
+            printf("Introduza a sua password:\n");
+            scanf("%s", password);
 
-		if (inicio != NULL && verifLoginGestor(inicio, id_received, password) != 0 ){
-                    id = id_received;
-                    menuGestorLogin();
-                } else {
-                    printf("ID ou password incorreto. Tente novamente.\n");
-                }
-                break;
+            if (inicio != NULL && verifLoginGestor(inicio, id_received, password) != 0 ){
+                        id = id_received;
+                        menuGestorLogin();
+                    } else {
+                        printf("ID ou password incorreto. Tente novamente.\n");
+                    }
+                    break;
 
-        case 2:
-        printf("Qual e o teu nome?\n");
-        fflush(stdin);
-        scanf("%[^\n]", nome);
-        printf("Qual e a sua password?\n");
-        scanf("%31s", password);
-        printf("Guarde o seu ID para utilizar no inicio da sua proxima sessao: %d\n", id);
-        fflush(stdin);
-        printf("Pressione qualquer tecla para continuar.");
-        getchar();
-        inicio=criarContaGestor(inicio, id++, password, nome);
-        guardarGestor(inicio);
+            case 2:
+            printf("Qual e o teu nome?\n");
+            fflush(stdin);
+            scanf("%[^\n]", nome);
+            printf("Qual e a sua password?\n");
+            scanf("%31s", password);
+            printf("Guarde o seu ID para utilizar no inicio da sua proxima sessao: %d\n", id);
+            fflush(stdin);
+            printf("Pressione qualquer tecla para continuar.");
+            getchar();
+            inicio=criarContaGestor(inicio, id++, password, nome);
+            guardarGestor(inicio);
 
-    if (inicio != NULL)
-    {
-        printf("Conta gestor criada com sucesso!\n");
-    }
-    else
-    {
-        printf("Erro ao criar conta gestor.\n");
-    }
-    break;
-    }
-    } while(opcaoGestor!=0);
+        if (inicio != NULL)
+        {
+            printf("Conta gestor criada com sucesso!\n");
+        }
+        else
+        {
+            printf("Erro ao criar conta gestor.\n");
+        }
+        break;
+        }
+        } while(opcaoGestor!=0);
 }
 
 void menuGestorLogin(){
     int opcao=0;
-    transporte *inicioID = NULL;
-    int id = atribuirIdTransportes(inicioID);
+    int id = getId("transportes.txt");
     int idCliente, idTransporte, idLogin;
     int tipo;
     char localizacao[MAX_MORADA_LENGTH +1];
@@ -215,14 +237,15 @@ void menuGestorLogin(){
         clear_console();
         printf("M E N U   G E S T O R   L O G I N\n\n");
         printf("1 Adicionar transporte\n");
-        printf("2 Listar transportes\n");
-        printf("3 Alterar dados de transportes\n");
-        printf("4 Remover transporte\n");
-        printf("5 Listar clientes\n");
-        printf("6 Alterar dados de cliente\n");
-        printf("7 Remover cliente\n");
-        printf("8 Alterar dados de gestor\n");
-        printf("9 Remover gestor\n");
+        printf("2 Listar todos os transportes\n");
+        printf("3 Listar transportes por localizacao\n");
+        printf("4 Alterar dados de transportes\n");
+        printf("5 Remover transporte\n");
+        printf("6 Listar clientes\n");
+        printf("7 Alterar dados de cliente\n");
+        printf("8 Remover cliente\n");
+        printf("9 Alterar dados de gestor\n");
+        printf("10 Remover gestor\n");
         printf("0 Voltar atras\n");
         scanf("%d", &opcao);
 
@@ -250,12 +273,20 @@ void menuGestorLogin(){
             break;
 
             case 2:
-            listarPorBateria(inicioTransporte);
+            listarPorAutonomia(inicioTransporte);
             fflush(stdin);
             getchar();
             break;
 
             case 3:
+            printf("Qual e a localizacao que deseja ver os transportes disponiveis?\n");
+            scanf("%31s", &localizacao);
+            listarPorLocalizacao(inicioTransporte, localizacao);
+            fflush(stdin);
+            getchar();
+            break;
+
+            case 4:
             printf("Qual e o ID do transporte que pretende alterar os dados?\n");
             scanf("%d", &idLogin);
             alterarDadosTransporte(inicioTransporte, idLogin);
@@ -263,18 +294,19 @@ void menuGestorLogin(){
             getchar();
             break;
 
-            case 4:
+            case 5:
             removerTransporte();
             fflush(stdin);
             getchar();
             break;
 
-            case 5:
+            case 6:
             listarClientes(inicioCliente);
             fflush(stdin);
             getchar();
+            break;
 
-            case 6:
+            case 7:
             printf("Qual e o ID do cliente que pretende alterar os dados?\n");
             scanf("%d", &idLogin);
             alterarDadosCliente(inicioCliente, idLogin);
@@ -282,13 +314,13 @@ void menuGestorLogin(){
             getchar();
             break;
 
-            case 7:
+            case 8:
             removerCliente();
             fflush(stdin);
             getchar();
             break;
 
-            case 8:
+            case 9:
             printf("Qual e o ID do gestor que pretende alterar os dados?\n");
             scanf("%d", &idLogin);
             alterarDadosGestor(inicioGestor, idLogin);
@@ -296,7 +328,7 @@ void menuGestorLogin(){
             getchar();
             break;
 
-            case 9:
+            case 10:
             removerGestor();
             fflush(stdin);
             getchar();

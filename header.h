@@ -55,8 +55,10 @@ void menuGestorLogin();
 transporte* criarTransporte(transporte * inicio, int id, int tipo, char localizacao[], float custo, float bat, float aut);
 void guardarTransporte(transporte* inicio);
 transporte* lerTransportes();
-void ordenarPorBateria(transporte* inicio);
-void listarPorBateria(transporte* inicio);
+void ordenarPorAutonomia(transporte* inicio);
+void listarPorAutonomia(transporte* inicio);
+void ordenarPorLocalizacao(transporte* inicio, char* localizacao);
+void listarPorLocalizacao(transporte* inicio, char* localizacao);
 void menuClienteLogin();
 void alterarDadosCliente(cliente* inicio, int id);
 void alterarDadosTransporte(transporte* inicio, int id);
@@ -71,8 +73,5 @@ void alterarDadosGestor(gestor* inicio, int id);
 gestor* buscarGestor(gestor* inicio, int id);
 void imprimirGestor(gestor* g);
 void removerGestor();
-int atribuirIdCliente(cliente * inicio);
-int atribuirIdGestores(gestor * inicio);
-int atribuirIdTransportes(transporte * inicio);
 
 #endif
