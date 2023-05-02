@@ -120,7 +120,7 @@ void alterarDadosCliente(cliente* inicio, int id) {
         printf("2 - NIF: %d\n", clienteAtual->nif);
         printf("3 - Morada: %s\n", clienteAtual->morada);
         printf("4 - Senha\n");
-        printf("5 - Saldo: %.2f\n", clienteAtual->saldo);
+        printf("5 - Carregar saldo: %.2f\n", clienteAtual->saldo);
         printf("0 - Confirmar alteracao de dados e sair\n");
         scanf("%d", &opcao);
 
@@ -148,14 +148,14 @@ void alterarDadosCliente(cliente* inicio, int id) {
                 scanf("%s", clienteAtual->password);
                 break;
             case 5:
-                do {
-                    printf("Qual o seu novo saldo?\n");
-                    scanf("%f", &clienteAtual->saldo);
-
-                    if (clienteAtual->saldo < 0) {
-                        printf("Erro: o saldo deve ser positivo.\n");
-                    }
-                } while (clienteAtual->saldo < 0);
+                printf("Quanto saldo deseja carregar na conta?\n");
+                float valor;
+                scanf("%f", &valor);
+                if (valor < 0) {
+                    printf("Erro: o valor deve ser positivo.\n");
+                } else {
+                    clienteAtual->saldo += valor;
+                }
                 break;
             case 0:
                 break;

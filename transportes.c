@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "header.h"
 
 /**
@@ -349,3 +350,67 @@ void removerTransporte(){
         printf("Transporte não encontrado!\n");
     }
 }
+
+void alugar_transporte(transporte* lista_transportes, int id_transporte, float *saldo) {
+    // Procura o transporte com o ID indicado na lista de transportes
+    transporte* transporte_alugado = NULL;
+    transporte* transporte_atual = lista_transportes;
+    while (transporte_atual != NULL) {
+        if (transporte_atual->id == id_transporte) {
+            transporte_alugado = transporte_atual;
+            break;
+        }
+        transporte_atual = transporte_atual->seguinte;
+    }
+    
+    // Se não encontrar o transporte, retorna
+    if (transporte_alugado == NULL) {
+        printf("Transporte com ID %d nao encontrado.\n", id_transporte);
+        return;
+    }
+    
+    // Inicia a viagem do transporte
+    printf("Transporte %d alugado com sucesso!\n", id_transporte);
+    printf("Localizacao atual: %s\n", transporte_alugado->localizacao);
+    time_t data_inicio = time(NULL);
+    printf("Data de inicio da viagem: %s", ctime(&data_inicio));
+    
+    // Aguarda o user indicar o fim da viagem
+    printf("Pressione enter para indicar o fim da viagem.");
+    scanf("%*c"); // descarta o caractere de nova linha pendente
+    getchar();
+    fflush(stdin);
+    
+    // Final da viagem
+    time_t data_fim = time(NULL);
+    printf("Transporte %d devolvido com sucesso!\n", id_transporte);
+    printf("Localizacao atual: %s\n", transporte_alugado->localizacao);
+    printf("Data do final da viagem: %s", ctime(&data_fim));
+    
+    // Calcula o tempo de uso do transporte
+    double tempo_uso_segundos = difftime(data_fim, data_inicio);
+    double tempo_uso_minutos = tempo_uso_segundos / 60.0;
+    double tempo_uso_horas = tempo_uso_minutos / 60.0;
+    printf("Tempo de uso: %.2f horas\n", tempo_uso_horas);
+    
+    // Calcula o custo do viagem
+    double custo_minuto = transporte_alugado->custo;
+    double custo_total = custo_minuto * tempo_uso_minutos;
+    printf("Custo total da viagem: %.2f\n", custo_total);
+
+    // Verifica se o saldo é suficiente para cobrir o custo total da viagem
+    if (*saldo < custo_total) {
+        printf("Saldo insuficiente para cobrir o custo da viagem.\n");
+        return;
+    }
+    
+    // Subtrai o custo total da viagem do saldo
+    *saldo -= custo_total;
+    printf("Custo da viagem debitado da conta. Saldo restante: %.2f\n", *saldo);
+}
+
+typedef struct alugar{
+    int id_transporte;
+    time_t data_inicio;
+    time_t data_fim;
+}alugar;

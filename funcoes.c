@@ -105,6 +105,7 @@ void menuClienteLogin(){
     int tipo;
     float bat=0;
     float aut=0;
+    float saldo=0;
     char localizacao[MAX_MORADA_LENGTH +1];
     cliente* inicioCliente = lerClientes();
     transporte* inicioTransporte = lerTransportes();
@@ -124,9 +125,10 @@ void menuClienteLogin(){
         clear_console();
         printf("M E N U   C L I E N T E   L O G I N\n\n");
         printf("1 Ver dados da conta\n");
-        printf("2 Alterar dados da conta\n");
+        printf("2 Alterar dados e/ou carregar saldo na conta\n");
         printf("3 Listar todos os transportes disponiveis\n");
         printf("4 Listar os transportes disponiveis por localizacao\n");
+        printf("5 Alugar transporte\n");
         printf("0 Voltar atras\n");
         scanf("%d", &opcao);
 
@@ -154,11 +156,18 @@ void menuClienteLogin(){
             fflush(stdin);
             getchar();
             break;
+            case 5:
+            printf("Digite o ID do transporte que deseja alugar: ");
+            int id_transporte;
+            scanf("%d", &id_transporte);
+            alugar_transporte(inicioTransporte, id_transporte, &saldo); //passa o valor da variável saldo que está armazenando o saldo atual do cliente por isso tem o "&"
+            fflush(stdin);
+            getchar();
+            break;
         }
 
     } while(opcao!=0);
 }
-
 
 
 // G E S T O R E S

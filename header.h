@@ -73,5 +73,6 @@ void alterarDadosGestor(gestor* inicio, int id);
 gestor* buscarGestor(gestor* inicio, int id);
 void imprimirGestor(gestor* g);
 void removerGestor();
+void alugar_transporte(transporte* lista_transportes, int id_transporte, float *saldo);
 
 #endif
