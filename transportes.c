@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 #include "header.h"
 
 /**
@@ -266,6 +265,7 @@ void alterarDadosTransporte(transporte* inicio, int id) { //a função recebe co
 
     printf("Dados do transporte atualizados com sucesso!\n");
 }
+
 /**
  * @brief buscar um transporte com um determinado ID em uma lista encadeada de transportes
  * 
@@ -286,6 +286,7 @@ transporte* buscarTransporte(transporte* inicio, int id) { //percorre a lista at
     // se chegou aqui, o cliente não foi encontrado
     return NULL;
 }
+
 /**
  * @brief recebe um ponteiro para uma estrutura transporte e imprime as informações desse transporte na consola
  * 
@@ -351,10 +352,17 @@ void removerTransporte(){
     }
 }
 
-void alugar_transporte(transporte* lista_transportes, int id_transporte, float *saldo) {
+/**
+ * @brief função que permite aos clientes alugar os transportes
+ * 
+ * @param inicioTransporte apontador para o inicio da lista de transportes
+ * @param id_transporte id correspondente ao transporte alugado
+ * @param saldo dinheiro que o utilizador tem na sua conta para alugar transportes
+ */
+void alugarTransporte(transporte* inicioTransporte, cliente* inicioCliente, int id_transporte, cliente* cliente_atual) {
     // Procura o transporte com o ID indicado na lista de transportes
     transporte* transporte_alugado = NULL;
-    transporte* transporte_atual = lista_transportes;
+    transporte* transporte_atual = inicioTransporte;
     while (transporte_atual != NULL) {
         if (transporte_atual->id == id_transporte) {
             transporte_alugado = transporte_atual;
@@ -362,55 +370,73 @@ void alugar_transporte(transporte* lista_transportes, int id_transporte, float *
         }
         transporte_atual = transporte_atual->seguinte;
     }
-    
+
     // Se não encontrar o transporte, retorna
     if (transporte_alugado == NULL) {
         printf("Transporte com ID %d nao encontrado.\n", id_transporte);
         return;
     }
-    
+
     // Inicia a viagem do transporte
     printf("Transporte %d alugado com sucesso!\n", id_transporte);
     printf("Localizacao atual: %s\n", transporte_alugado->localizacao);
     time_t data_inicio = time(NULL);
-    printf("Data de inicio da viagem: %s", ctime(&data_inicio));
-    
-    // Aguarda o user indicar o fim da viagem
+    char str_data_inicio[20];
+    strftime(str_data_inicio, 20, "%d/%m/%Y %H:%M:%S", localtime(&data_inicio));
+    printf("Data de inicio da viagem: %s\n", str_data_inicio);
+
+    // Aguarda o usuário indicar o fim da viagem
     printf("Pressione enter para indicar o fim da viagem.");
-    scanf("%*c"); // descarta o caractere de nova linha pendente
-    getchar();
     fflush(stdin);
-    
+    getchar();
+
     // Final da viagem
     time_t data_fim = time(NULL);
     printf("Transporte %d devolvido com sucesso!\n", id_transporte);
     printf("Localizacao atual: %s\n", transporte_alugado->localizacao);
     printf("Data do final da viagem: %s", ctime(&data_fim));
-    
+
     // Calcula o tempo de uso do transporte
     double tempo_uso_segundos = difftime(data_fim, data_inicio);
     double tempo_uso_minutos = tempo_uso_segundos / 60.0;
     double tempo_uso_horas = tempo_uso_minutos / 60.0;
     printf("Tempo de uso: %.2f horas\n", tempo_uso_horas);
-    
-    // Calcula o custo do viagem
+
+    // Calcula o custo da viagem
     double custo_minuto = transporte_alugado->custo;
     double custo_total = custo_minuto * tempo_uso_minutos;
     printf("Custo total da viagem: %.2f\n", custo_total);
 
     // Verifica se o saldo é suficiente para cobrir o custo total da viagem
-    if (*saldo < custo_total) {
-        printf("Saldo insuficiente para cobrir o custo da viagem.\n");
+    if (cliente_atual == NULL) {
+        printf("Erro: ponteiro de cliente invalido.\n");
         return;
     }
-    
-    // Subtrai o custo total da viagem do saldo
-    *saldo -= custo_total;
-    printf("Custo da viagem debitado da conta. Saldo restante: %.2f\n", *saldo);
-}
 
-typedef struct alugar{
-    int id_transporte;
-    time_t data_inicio;
-    time_t data_fim;
-}alugar;
+    if (cliente_atual->saldo < custo_total) {
+        printf("Saldo insuficiente para cobrir o custo total da viagem.\n");
+        return;
+    }
+
+    // Subtrai o custo total da viagem do saldo do cliente
+    double novo_saldo = cliente_atual->saldo - custo_total;
+    cliente_atual->saldo = novo_saldo;
+    printf("Custo da viagem debitado da conta. Saldo restante: %.2f\n", novo_saldo);
+
+    // atualiza o saldo do ficheiro
+    FILE* fp = fopen("clientes.txt", "w+");
+    if (fp == NULL) {
+        printf("Erro ao abrir o ficheiro.\n");
+        return;
+    }
+
+    // escreve o saldo do cliente atualizado no ficheiro
+    while (inicioCliente != NULL) {
+        fprintf(fp, "%d;%s;%s;%d;%s;%.2f\n", inicioCliente->id, inicioCliente->nome, inicioCliente->password, inicioCliente->nif, inicioCliente->morada, inicioCliente->saldo);
+        inicioCliente = inicioCliente->seguinte;
+    }
+
+    fclose(fp);
+
+    printf("Saldo do cliente atualizado com sucesso!\n");
+}

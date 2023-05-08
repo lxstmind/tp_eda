@@ -4,6 +4,7 @@
 #define MAX_NAME_LENGTH 64
 #define MAX_MORADA_LENGTH 64
 #define MAX_LOCAL_LENGTH 64
+#include <time.h>
 
 typedef struct {
     int dia;
@@ -18,6 +19,7 @@ typedef struct cliente{
     int nif;
     char morada[MAX_MORADA_LENGTH +1];
     float saldo;
+    struct viagem* viagens;
     struct cliente* seguinte;
 }cliente;
 
@@ -37,6 +39,23 @@ typedef struct transporte{
     float aut;
     struct transporte* seguinte;
 }transporte;
+
+typedef struct viagem {
+    int id_transporte;
+    float preco;
+    struct data {
+        int dia;
+        int mes;
+        int ano;
+    } data;
+    struct viagem* seguinte;
+}viagem;
+
+typedef struct alugar{
+    int id_transporte;
+    time_t data_inicio;
+    time_t data_fim;
+}alugar;
 
 void menu();
 void clear_console();
@@ -59,7 +78,7 @@ void ordenarPorAutonomia(transporte* inicio);
 void listarPorAutonomia(transporte* inicio);
 void ordenarPorLocalizacao(transporte* inicio, char* localizacao);
 void listarPorLocalizacao(transporte* inicio, char* localizacao);
-void menuClienteLogin();
+void menuClienteLogin(int idLogin);
 void alterarDadosCliente(cliente* inicio, int id);
 void alterarDadosTransporte(transporte* inicio, int id);
 void imprimirCliente(cliente* c);
@@ -73,6 +92,6 @@ void alterarDadosGestor(gestor* inicio, int id);
 gestor* buscarGestor(gestor* inicio, int id);
 void imprimirGestor(gestor* g);
 void removerGestor();
-void alugar_transporte(transporte* lista_transportes, int id_transporte, float *saldo);
+void alugarTransporte(transporte* inicioTransporte, cliente* inicioCliente, int id_transporte, cliente* cliente_atual);
 
 #endif

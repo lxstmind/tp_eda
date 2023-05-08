@@ -54,7 +54,7 @@ void menuCliente(){
             scanf("%s", password);
 
             if (inicio != NULL && verifLoginCliente(inicio, id_received, password) != 0 ){
-                menuClienteLogin();
+                menuClienteLogin(id);
             } else {
                 printf("ID ou password incorreto. Tente novamente.\n");
             }
@@ -99,8 +99,8 @@ void menuCliente(){
             } while (opcaoCliente != 0);
 }
 
-void menuClienteLogin(){
-    int opcao=0, idLogin;
+void menuClienteLogin(int idLogin){
+    int opcao=0;
     int id = getId("clientes.txt");
     int tipo;
     float bat=0;
@@ -109,9 +109,6 @@ void menuClienteLogin(){
     char localizacao[MAX_MORADA_LENGTH +1];
     cliente* inicioCliente = lerClientes();
     transporte* inicioTransporte = lerTransportes();
-
-    printf("Confirme o seu ID novamente para mostrar que nao e robo.\n");
-    scanf("%d", &idLogin);
 
     // buscar o cliente correspondente ao ID informado
     cliente* clienteLogado = buscarCliente(inicioCliente, idLogin);
@@ -134,38 +131,41 @@ void menuClienteLogin(){
 
         switch(opcao){
             case 1:
-            imprimirCliente(clienteLogado);
-            fflush(stdin);
-            getchar();
-            break;
-            case 2:
-            alterarDadosCliente(inicioCliente, idLogin);
-            fflush(stdin);
-            getchar();
-            break;
-            case 3:
-            printf("Tenha atencao que o tipo 1 e trotinete e o tipo 2 e bicicleta.\n");
-            listarPorAutonomia(inicioTransporte);
-            fflush(stdin);
-            getchar();
-            break;
-            case 4:
-            printf("Qual e a localizacao que deseja ver os transportes disponiveis?\n");
-            scanf("%31s", &localizacao);
-            listarPorLocalizacao(inicioTransporte, localizacao);
-            fflush(stdin);
-            getchar();
-            break;
-            case 5:
-            printf("Digite o ID do transporte que deseja alugar: ");
-            int id_transporte;
-            scanf("%d", &id_transporte);
-            alugar_transporte(inicioTransporte, id_transporte, &saldo); //passa o valor da variável saldo que está armazenando o saldo atual do cliente por isso tem o "&"
-            fflush(stdin);
-            getchar();
-            break;
-        }
+                imprimirCliente(clienteLogado);
+                fflush(stdin);
+                getchar();
+                break;
 
+            case 2:
+                alterarDadosCliente(inicioCliente, idLogin);
+                fflush(stdin);
+                getchar();
+                break;
+
+            case 3:
+                printf("Tenha atencao que o tipo 1 e trotinete e o tipo 2 e bicicleta.\n");
+                listarPorAutonomia(inicioTransporte);
+                fflush(stdin);
+                getchar();
+                break;
+
+            case 4:
+                printf("Qual e a localizacao que deseja ver os transportes disponiveis?\n");
+                scanf("%31s", localizacao);
+                listarPorLocalizacao(inicioTransporte, localizacao);
+                fflush(stdin);
+                getchar();
+                break;
+                
+            case 5:
+                printf("Digite o ID do transporte que deseja alugar: ");
+                int id_transporte;
+                scanf("%d", &id_transporte);
+                alugarTransporte(inicioTransporte, inicioCliente, id_transporte, clienteLogado);
+                fflush(stdin);
+                getchar();
+                break;
+        }
     } while(opcao!=0);
 }
 
@@ -260,88 +260,88 @@ void menuGestorLogin(){
 
         switch(opcao){
             case 1:
-            printf("Qual e o tipo do transporte?\n");
-            printf("Selecione 1 trotinete ou 2 bicicleta\n");
-            scanf("%d", &tipo);
-            printf("Qual e a localizacao do transporte?\n");
-            scanf("%31s", &localizacao);
-            printf("Qual e o custo por hora do transporte?\n");
-            scanf("%f", &custo);
-            do{
-                printf("Qual e a percentagem da bateria do transporte?\n");
-                scanf("%f", &bat);
-                if (bat < 0 || bat > 100) {
-                    printf("Erro: a percentagem de bateria deve estar entre 0 e 100.\n");
-                }
-            } while (bat < 0 || bat > 100);
-            printf("Qual e a autonomia do transporte?\n");
-            scanf("%f", &aut);
-            
-            inicioTransporte=criarTransporte(inicioTransporte, id++, tipo, localizacao, custo, bat, aut);
-            guardarTransporte(inicioTransporte);
-            break;
+                printf("Qual e o tipo do transporte?\n");
+                printf("Selecione 1 trotinete ou 2 bicicleta\n");
+                scanf("%d", &tipo);
+                printf("Qual e a localizacao do transporte?\n");
+                scanf("%31s", &localizacao);
+                printf("Qual e o custo por hora do transporte?\n");
+                scanf("%f", &custo);
+                do{
+                    printf("Qual e a percentagem da bateria do transporte?\n");
+                    scanf("%f", &bat);
+                    if (bat < 0 || bat > 100) {
+                        printf("Erro: a percentagem de bateria deve estar entre 0 e 100.\n");
+                    }
+                } while (bat < 0 || bat > 100);
+                printf("Qual e a autonomia do transporte?\n");
+                scanf("%f", &aut);
+                
+                inicioTransporte=criarTransporte(inicioTransporte, id++, tipo, localizacao, custo, bat, aut);
+                guardarTransporte(inicioTransporte);
+                break;
 
             case 2:
-            listarPorAutonomia(inicioTransporte);
-            fflush(stdin);
-            getchar();
-            break;
+                listarPorAutonomia(inicioTransporte);
+                fflush(stdin);
+                getchar();
+                break;
 
             case 3:
-            printf("Qual e a localizacao que deseja ver os transportes disponiveis?\n");
-            scanf("%31s", &localizacao);
-            listarPorLocalizacao(inicioTransporte, localizacao);
-            fflush(stdin);
-            getchar();
-            break;
+                printf("Qual e a localizacao que deseja ver os transportes disponiveis?\n");
+                scanf("%31s", &localizacao);
+                listarPorLocalizacao(inicioTransporte, localizacao);
+                fflush(stdin);
+                getchar();
+                break;
 
             case 4:
-            printf("Qual e o ID do transporte que pretende alterar os dados?\n");
-            scanf("%d", &idLogin);
-            alterarDadosTransporte(inicioTransporte, idLogin);
-            fflush(stdin);
-            getchar();
-            break;
+                printf("Qual e o ID do transporte que pretende alterar os dados?\n");
+                scanf("%d", &idLogin);
+                alterarDadosTransporte(inicioTransporte, idLogin);
+                fflush(stdin);
+                getchar();
+                break;
 
             case 5:
-            removerTransporte();
-            fflush(stdin);
-            getchar();
-            break;
+                removerTransporte();
+                fflush(stdin);
+                getchar();
+                break;
 
             case 6:
-            listarClientes(inicioCliente);
-            fflush(stdin);
-            getchar();
-            break;
+                listarClientes(inicioCliente);
+                fflush(stdin);
+                getchar();
+                break;
 
             case 7:
-            printf("Qual e o ID do cliente que pretende alterar os dados?\n");
-            scanf("%d", &idLogin);
-            alterarDadosCliente(inicioCliente, idLogin);
-            fflush(stdin);
-            getchar();
-            break;
+                printf("Qual e o ID do cliente que pretende alterar os dados?\n");
+                scanf("%d", &idLogin);
+                alterarDadosCliente(inicioCliente, idLogin);
+                fflush(stdin);
+                getchar();
+                break;
 
             case 8:
-            removerCliente();
-            fflush(stdin);
-            getchar();
-            break;
+                removerCliente();
+                fflush(stdin);
+                getchar();
+                break;
 
             case 9:
-            printf("Qual e o ID do gestor que pretende alterar os dados?\n");
-            scanf("%d", &idLogin);
-            alterarDadosGestor(inicioGestor, idLogin);
-            fflush(stdin);
-            getchar();
-            break;
+                printf("Qual e o ID do gestor que pretende alterar os dados?\n");
+                scanf("%d", &idLogin);
+                alterarDadosGestor(inicioGestor, idLogin);
+                fflush(stdin);
+                getchar();
+                break;
 
             case 10:
-            removerGestor();
-            fflush(stdin);
-            getchar();
-            break;
+                removerGestor();
+                fflush(stdin);
+                getchar();
+                break;
         }
     } while(opcao!=0);
 }
