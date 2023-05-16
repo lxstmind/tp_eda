@@ -1,0 +1,2 @@
+defenir uma estruta de localizacoes por onde os transportes e os clientes vão andar;
+escrever no ficheiro e ler do ficheiro os lugares onde os clientes/transportes estão (um cliente num raio de x km listar os trasnportes que ele pode alugar);

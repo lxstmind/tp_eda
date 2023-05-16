@@ -122,7 +122,7 @@ void menuClienteLogin(int idLogin){
         clear_console();
         printf("M E N U   C L I E N T E   L O G I N\n\n");
         printf("1 Ver dados da conta\n");
-        printf("2 Alterar dados e/ou carregar saldo na conta\n");
+        printf("2 Atualizar dados e/ou carregar saldo na conta\n");
         printf("3 Listar todos os transportes disponiveis\n");
         printf("4 Listar os transportes disponiveis por localizacao\n");
         printf("5 Alugar transporte\n");
@@ -238,16 +238,22 @@ void menuGestorLogin(){
     float custo=0;
     float bat=0;
     float aut=0;
+    char novoId[MAX_LOCAL_LENGTH];
+    char nomeLugar[MAX_LOCAL_LENGTH];
+    char vOrigem[MAX_LOCAL_LENGTH];
+    char vDestino[MAX_LOCAL_LENGTH];
+    float peso;
     transporte* inicioTransporte = lerTransportes();
     cliente* inicioCliente = lerClientes();
     gestor* inicioGestor = lerGestores();
+    Grafo g = NULL;
 
     do {
         clear_console();
         printf("M E N U   G E S T O R   L O G I N\n\n");
         printf("1 Adicionar transporte\n");
         printf("2 Listar todos os transportes\n");
-        printf("3 Listar transportes por localizacao\n");
+        printf("3 Listar transportes por localizacao especifica\n");
         printf("4 Alterar dados de transportes\n");
         printf("5 Remover transporte\n");
         printf("6 Listar clientes\n");
@@ -255,6 +261,9 @@ void menuGestorLogin(){
         printf("8 Remover cliente\n");
         printf("9 Alterar dados de gestor\n");
         printf("10 Remover gestor\n");
+        printf("11 Adicionar localizacao\n");
+        printf("12 Adicionar caminho\n");
+        printf("13 Listar transportes mais perto disponiveis\n");
         printf("0 Voltar atras\n");
         scanf("%d", &opcao);
 
@@ -342,6 +351,76 @@ void menuGestorLogin(){
                 fflush(stdin);
                 getchar();
                 break;
+            
+            case 11: {
+                printf("Digite o novo identificador do vertice: ");
+                scanf("%s", novoId);
+                
+                printf("Digite o nome do lugar: ");
+                scanf(" %[^\n]", nomeLugar);
+                
+                int resultado = criarVertice(&g, novoId);
+                if (resultado == 1) {
+                    printf("Vertice criado com sucesso!\n");
+
+                    // Abre o arquivo "localizacoes.txt" em modo de escrita (cria o arquivo se não existir)
+                    FILE *arquivo = fopen("localizacoes.txt", "w");
+                    if (arquivo == NULL) {
+                        printf("Falha ao abrir o arquivo.\n");
+                        break;
+                    }
+
+                    // Escreve as informações do vértice no arquivo
+                    fprintf(arquivo, "%s;%s\n", novoId, nomeLugar);
+
+                    // Fecha o arquivo
+                    fclose(arquivo);
+                } else {
+                    printf("Falha ao criar vertice.\n");
+                }
+                break;
+            }
+
+            case 12: {
+                char vOrigem[100];
+                char vDestino[100];
+                float peso;
+
+                printf("Digite o vertice de origem: ");
+                scanf("%s", vOrigem);
+
+                printf("Digite o vertice de destino: ");
+                scanf("%s", vDestino);
+
+                printf("Digite o peso da aresta: ");
+                scanf("%f", &peso);
+
+                int resultado = criarAresta(g, vOrigem, vDestino, peso);
+                if (resultado == 1) {
+                    printf("Aresta criada com sucesso!\n");
+                } else {
+                    printf("Falha ao criar aresta.\n");
+                }
+
+                FILE *arquivo = fopen("arestas.txt", "w");
+                if (arquivo == NULL) {
+                    printf("Falha ao abrir o arquivo.\n");
+                    break;
+                }
+
+                // Escreve as informações da aresta no arquivo
+                fprintf(arquivo, "%s;%s;%.3f\n", vOrigem, vDestino, peso);
+
+                // Fecha o arquivo
+                fclose(arquivo);
+
+                printf("Aresta criada com sucesso!\n");
+                break;
+            }
+
+            case 13:
+                printf("entrou");
+            break;
         }
     } while(opcao!=0);
 }

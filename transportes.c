@@ -295,6 +295,7 @@ transporte* buscarTransporte(transporte* inicio, int id) { //percorre a lista at
 void imprimirTransporte(transporte* t) {
     printf("ID: %d, Tipo: %d, Custo: %.2f, Bateria: %.2f, Autonomia: %.2f", t->id, t->tipo, t->custo, t->bat, t->aut);
 }
+
 /**
  * @brief recebe um ID do gestor para remover o transporte de um ficheiro de texto
  * 
