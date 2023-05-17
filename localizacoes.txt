@@ -2,4 +2,4 @@ araras.quao.metabolismos;Rotunda de Barcelos
 rolico.angico.almeiroes;IPCA de Barcelos
 velhas.cigano.junte;Ponte Medieval de Barcelos
 almeiroes.pacoquinhas.valem;Parque de Barcelos
-bocal.sardas.sorvetes;Camara Municipal de Barceloslocal;porto
+bocal.sardas.sorvetes;Camara Municipal de Barcelos

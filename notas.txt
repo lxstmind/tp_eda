@@ -1,2 +1,7 @@
-defenir uma estruta de localizacoes por onde os transportes e os clientes vão andar;
-escrever no ficheiro e ler do ficheiro os lugares onde os clientes/transportes estão (um cliente num raio de x km listar os trasnportes que ele pode alugar);
+erros:
+não lista adjacentes;
+não remove vertices do ficheiro;
+
+falta:
+apresentar um raio de x metros os meios de trasnportes disponiveis;
+fazer a recolha das trotinetes;

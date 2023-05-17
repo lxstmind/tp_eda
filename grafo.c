@@ -47,84 +47,44 @@ int criarAresta(Grafo g, char vOrigem[], char vDestino[], float peso)
 }
 
 // Listar os vértices adjacentes 
-void listarAdjacentes(Grafo g, char vertice[])
-{Adjacente aux;
- if (existeVertice(g,vertice))
- {while (strcmp(g->vertice,vertice)!=0) g=g->seguinte;
-  aux = g->adjacentes;
-  while (aux!=NULL) 
-  {printf("Adjacente:%s Peso:%.2f\n", aux->vertice, aux->peso);
-   aux=aux->seguinte;
-  }
- }
-}
-
-// Inserir meio de transporte na localização com geocódigo passado por parâmetro
-// Devolve 1 em caso de sucesso ou 0 caso contrário
-int inserirMeio(Grafo g, char geocodigo[], int codigoMeio)
-{
- while ((g!=NULL)&&(strcmp(g->vertice,geocodigo)!=0))
-	 g=g->seguinte;
- if (g==NULL) return(0);
- else {Meios novo = malloc(sizeof(struct registo3));
-       novo->codigo = codigoMeio;
-       novo->seguinte = g->meios;
-       g->meios = novo;
-       return(1);	 
-      }
-}
-
-// Listar os códigos dos meios de transporte presente numa determinada localização passada por parâmetro
-void listarMeios(Grafo g, char geocodigo[])
-{
- while ((g!=NULL)&&(strcmp(g->vertice,geocodigo)!=0))
-	 g=g->seguinte;
- if (g!=NULL) 
- {Meios aux=g->meios;
-  if (aux==NULL) printf("sem meios de transporte\n");
-  else while(aux!=NULL)
-  {printf("Codigo meio: %d\n", aux->codigo);
-   aux = aux->seguinte;
-  }
- }
- else printf("geocodigo inexistente\n");
-}
-
-/*
-int main()
-{Grafo g = NULL;
-
- criarVertice(&g,"araras.quao.metabolismos");
- criarVertice(&g,"rolico.angico.almeiroes");
- criarVertice(&g,"velhas.cigano.junte");
- criarVertice(&g,"almeiroes.pacoquinhas.valem");
- criarVertice(&g,"bocal.sardas.sorvetes");
-
- criarAresta(g,"araras.quao.metabolismos","rolico.angico.almeiroes",0.710F);
- criarAresta(g,"araras.quao.metabolismos","velhas.cigano.junte",1.130F);
- criarAresta(g,"araras.quao.metabolismos","almeiroes.pacoquinhas.valem",0.250F);
- criarAresta(g,"araras.quao.metabolismos","bocal.sardas.sorvetes",1.010F);
-
-
- inserirMeio(g,"///dimly.nuttier.pitch",100);
- inserirMeio(g,"///dimly.nuttier.pitch",101);
- inserirMeio(g,"///dimly.nuttier.pitch",102);
- inserirMeio(g,"///babbled.trifling.consoled",200);
-}
-*/
-
-Grafo* lerGrafo(){
-    FILE* fp;
-    fp = fopen("arestas.txt","r");
-
-    if (fp!=NULL){
-        char aresta[50];
-        float peso;
-
-        while (!feof(fp)) {
-            fscanf(fp, "%[^;];%[^;];%f\n", &aresta, &aresta, &peso);
+void listarAdjacentes(Grafo g, char vertice[]) {
+    while (g != NULL) {
+        if (strcmp(g->vertice, vertice) == 0) {
+            Adjacente aux = g->adjacentes;
+            while (aux != NULL) {
+                printf("Adjacente: %s Peso: %.2f\n", aux->vertice, aux->peso);
+                aux = aux->seguinte;
+            }
+            return;
         }
-
-        fclose(fp);
+        g = g->seguinte;
     }
+    printf("O vertice %s nao foi encontrado.\n", vertice);
+}
+
+Grafo* lerGrafo() {
+    FILE* fp;
+    fp = fopen("arestas.txt", "r");
+    if (fp == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return NULL;
+    }
+
+    char origem[MAX_LOCAL_LENGTH];
+    char destino[MAX_LOCAL_LENGTH];
+    float peso;
+
+    Grafo *grafo = NULL;
+    while (fscanf(fp, "%[^;];%[^;];%f\n", origem, destino, &peso) == 3) {
+        if (!existeVertice(*grafo, origem)) {
+            criarVertice(grafo, origem);
+        }
+        if (!existeVertice(*grafo, destino)) {
+            criarVertice(grafo, destino);
+        }
+        criarAresta(*grafo, origem, destino, peso);
+    }
+
+    fclose(fp);
+    return grafo;
 }

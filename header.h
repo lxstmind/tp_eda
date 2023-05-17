@@ -128,8 +128,5 @@ int criarAresta(Grafo g, char vOrigem[], char vDestino[], float peso);
 int existeVertice(Grafo g, char vertice[]);
 void listarAdjacentes(Grafo g, char vertice[]);
 // Inserir meio de transporte na localização com geocódigo passado por parâmetro
-int inserirMeio(Grafo g, char geocodigo[], int codigoMeio);
-// Listar os códigos dos meios de transporte presente numa determinada localização passada por parâmetro
-void listarMeios(Grafo g, char geocodigo[]);
 
 #endif

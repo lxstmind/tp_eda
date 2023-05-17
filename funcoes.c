@@ -125,7 +125,8 @@ void menuClienteLogin(int idLogin){
         printf("2 Atualizar dados e/ou carregar saldo na conta\n");
         printf("3 Listar todos os transportes disponiveis\n");
         printf("4 Listar os transportes disponiveis por localizacao\n");
-        printf("5 Alugar transporte\n");
+        printf("5 Listar os transportes mais proximos disponiveis\n");
+        printf("6 Alugar transporte\n");
         printf("0 Voltar atras\n");
         scanf("%d", &opcao);
 
@@ -156,8 +157,12 @@ void menuClienteLogin(int idLogin){
                 fflush(stdin);
                 getchar();
                 break;
-                
+            
             case 5:
+                printf("ola");
+            break;
+
+            case 6:
                 printf("Digite o ID do transporte que deseja alugar: ");
                 int id_transporte;
                 scanf("%d", &id_transporte);
@@ -243,6 +248,8 @@ void menuGestorLogin(){
     char vOrigem[MAX_LOCAL_LENGTH];
     char vDestino[MAX_LOCAL_LENGTH];
     float peso;
+    char vertice[MAX_LOCAL_LENGTH];
+    char verticeRemover[MAX_LOCAL_LENGTH];
     transporte* inicioTransporte = lerTransportes();
     cliente* inicioCliente = lerClientes();
     gestor* inicioGestor = lerGestores();
@@ -263,7 +270,9 @@ void menuGestorLogin(){
         printf("10 Remover gestor\n");
         printf("11 Adicionar localizacao\n");
         printf("12 Adicionar caminho\n");
-        printf("13 Listar transportes mais perto disponiveis\n");
+        printf("13 Remover localizacao\n");
+        printf("14 Remover caminho\n");
+        printf("15 Listar vertices adjacentes\n");
         printf("0 Voltar atras\n");
         scanf("%d", &opcao);
 
@@ -419,7 +428,17 @@ void menuGestorLogin(){
             }
 
             case 13:
-                printf("entrou");
+            break;
+
+            case 14:
+            break;
+
+            case 15:
+                printf("Digite o vertice para listar os vertices adjacentes: ");
+                scanf("%s", vertice);
+                listarAdjacentes(g, vertice);
+                fflush(stdin);
+                getchar();
             break;
         }
     } while(opcao!=0);
