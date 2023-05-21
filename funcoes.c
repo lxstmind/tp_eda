@@ -248,8 +248,7 @@ void menuGestorLogin(){
     char vOrigem[MAX_LOCAL_LENGTH];
     char vDestino[MAX_LOCAL_LENGTH];
     float peso;
-    char vertice[MAX_LOCAL_LENGTH];
-    char verticeRemover[MAX_LOCAL_LENGTH];
+    char ponto[MAX_LOCAL_LENGTH];
     transporte* inicioTransporte = lerTransportes();
     cliente* inicioCliente = lerClientes();
     gestor* inicioGestor = lerGestores();
@@ -391,10 +390,6 @@ void menuGestorLogin(){
             }
 
             case 12: {
-                char vOrigem[100];
-                char vDestino[100];
-                float peso;
-
                 printf("Digite o vertice de origem: ");
                 scanf("%s", vOrigem);
 
@@ -424,19 +419,27 @@ void menuGestorLogin(){
                 fclose(arquivo);
 
                 printf("Aresta criada com sucesso!\n");
+                fflush(stdin);
+                getchar();
                 break;
             }
 
             case 13:
+                removerLocalizacao();
+                fflush(stdin);
+                getchar();
             break;
 
             case 14:
+                removerAresta();
+                fflush(stdin);
+                getchar();
             break;
 
             case 15:
-                printf("Digite o vertice para listar os vertices adjacentes: ");
-                scanf("%s", vertice);
-                listarAdjacentes(g, vertice);
+                printf("Informe o ponto: ");
+                scanf("%s", ponto);
+                listarArestasPorPonto(ponto);
                 fflush(stdin);
                 getchar();
             break;

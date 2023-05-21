@@ -1,7 +1,3 @@
-erros:
-não lista adjacentes;
-não remove vertices do ficheiro;
-
 falta:
 apresentar um raio de x metros os meios de trasnportes disponiveis;
 fazer a recolha das trotinetes;
