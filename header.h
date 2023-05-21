@@ -7,12 +7,6 @@
 #define TAM 50
 #include <time.h>
 
-typedef struct {
-    int dia;
-    int mes;
-    int ano;
-}data;
-
 typedef struct cliente{
     int id;
     char password[MAX_PASSWORD_LENGTH + 1]; // +1 para o \n
@@ -126,8 +120,6 @@ int criarVertice(Grafo *g, char novoId[]);
 // Devolve 1 em caso de sucesso ou 0 caso contrário
 int criarAresta(Grafo g, char vOrigem[], char vDestino[], float peso);
 int existeVertice(Grafo g, char vertice[]);
-void listarAdjacentes(Grafo g, char vertice[]);
-// Inserir meio de transporte na localização com geocódigo passado por parâmetro
 void removerLocalizacao();
 void removerAresta();
 void listarArestasPorPonto(const char* ponto);

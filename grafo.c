@@ -46,49 +46,6 @@ int criarAresta(Grafo g, char vOrigem[], char vDestino[], float peso)
  else return(0);
 }
 
-// Listar os vértices adjacentes 
-void listarAdjacentes(Grafo g, char vertice[]) {
-    while (g != NULL) {
-        if (strcmp(g->vertice, vertice) == 0) {
-            Adjacente aux = g->adjacentes;
-            while (aux != NULL) {
-                printf("Adjacente: %s Peso: %.2f\n", aux->vertice, aux->peso);
-                aux = aux->seguinte;
-            }
-            return;
-        }
-        g = g->seguinte;
-    }
-    printf("O vertice %s nao foi encontrado.\n", vertice);
-}
-
-Grafo* lerGrafo() {
-    FILE* fp;
-    fp = fopen("arestas.txt", "r");
-    if (fp == NULL) {
-        printf("Erro ao abrir o ficheiro.\n");
-        return NULL;
-    }
-
-    char origem[MAX_LOCAL_LENGTH];
-    char destino[MAX_LOCAL_LENGTH];
-    float peso;
-
-    Grafo *grafo = NULL;
-    while (fscanf(fp, "%[^;];%[^;];%f\n", origem, destino, &peso) == 3) {
-        if (!existeVertice(*grafo, origem)) {
-            criarVertice(grafo, origem);
-        }
-        if (!existeVertice(*grafo, destino)) {
-            criarVertice(grafo, destino);
-        }
-        criarAresta(*grafo, origem, destino, peso);
-    }
-
-    fclose(fp);
-    return grafo;
-}
-
 void removerLocalizacao() {
     char idRemover[100];
     printf("Informe o ID da localizacao a ser removida: ");
