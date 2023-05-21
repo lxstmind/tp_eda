@@ -189,3 +189,27 @@ void listarArestasPorPonto(const char* ponto) {
         printf("Nao foram encontradas arestas para o ponto '%s'\n", ponto);
     }
 }
+
+void imprimirLocalizacao(const char* id) {
+    FILE* arquivo = fopen("localizacoes.txt", "r");
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo de localizacoes.\n");
+        return;
+    }
+
+    char linha[MAX_LOCAL_LENGTH];
+    char* token;
+
+    while (fgets(linha, MAX_LOCAL_LENGTH, arquivo) != NULL) {
+        token = strtok(linha, ";");
+        if (strcmp(token, id) == 0) {
+            token = strtok(NULL, ";");
+            printf("Local: %s\n", token);
+            fclose(arquivo);
+            return;
+        }
+    }
+
+    fclose(arquivo);
+    printf("ID nao encontrado.\n");
+}

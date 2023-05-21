@@ -123,5 +123,6 @@ int existeVertice(Grafo g, char vertice[]);
 void removerLocalizacao();
 void removerAresta();
 void listarArestasPorPonto(const char* ponto);
+void imprimirLocalizacao(const char* id);
 
 #endif

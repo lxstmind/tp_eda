@@ -321,9 +321,9 @@ void removerTransporte(){
     }
 
     // Percorre o ficheiro de transportes linha por linha
-    char linha[100];
+    char linha[MAX_LOCAL_LENGTH];
     int encontrou = 0;
-    while(fgets(linha, 100, fp)){
+    while(fgets(linha, MAX_LOCAL_LENGTH, fp)){
         // Lê o ID da linha atual
         int id;
         sscanf(linha, "%d;", &id);
@@ -411,7 +411,7 @@ void alugarTransporte(transporte* inicioTransporte, cliente* inicioCliente, int 
         return;
     }
 
-    char linha_aresta[100];
+    char linha_aresta[MAX_LOCAL_LENGTH];
     char ponto_origem[50];
     char ponto_destino[50];
     float distancia = 0;
@@ -460,7 +460,7 @@ void alugarTransporte(transporte* inicioTransporte, cliente* inicioCliente, int 
         return;
     }
 
-    char linha_transporte[100];
+    char linha_transporte[MAX_LOCAL_LENGTH];
     while (fgets(linha_transporte, sizeof(linha_transporte), fp_transporte)) {
         int id, tipo;
         char localizacao[MAX_MORADA_LENGTH + 1];

@@ -107,6 +107,7 @@ void menuClienteLogin(int idLogin){
     float aut=0;
     float saldo=0;
     char localizacao[MAX_MORADA_LENGTH +1];
+    char idLocal[MAX_LOCAL_LENGTH];
     cliente* inicioCliente = lerClientes();
     transporte* inicioTransporte = lerTransportes();
 
@@ -123,10 +124,11 @@ void menuClienteLogin(int idLogin){
         printf("M E N U   C L I E N T E   L O G I N\n\n");
         printf("1 Ver dados da conta\n");
         printf("2 Alterar dados e/ou carregar saldo na conta\n");
-        printf("3 Listar todos os transportes disponiveis\n");
-        printf("4 Listar os transportes disponiveis por localizacao\n");
-        printf("5 Listar os transportes mais proximos disponiveis\n");
-        printf("6 Alugar transporte\n");
+        printf("3 Listar por ID as localizacoes\n");
+        printf("4 Listar todos os transportes disponiveis\n");
+        printf("5 Listar os transportes disponiveis por localizacao\n");
+        printf("6 Listar os transportes mais proximos disponiveis\n");
+        printf("7 Alugar transporte\n");
         printf("0 Voltar atras\n");
         scanf("%d", &opcao);
 
@@ -142,15 +144,22 @@ void menuClienteLogin(int idLogin){
                 fflush(stdin);
                 getchar();
                 break;
-
             case 3:
+                printf("Digite o ID: ");
+                scanf("%s", idLocal);
+                imprimirLocalizacao(idLocal);
+                fflush(stdin);
+                getchar();
+                break;
+                
+            case 4:
                 printf("Tenha atencao que o tipo 1 e trotinete e o tipo 2 e bicicleta.\n");
                 listarPorAutonomia(inicioTransporte);
                 fflush(stdin);
                 getchar();
                 break;
 
-            case 4:
+            case 5:
                 printf("Qual e a localizacao que deseja ver os transportes disponiveis?\n");
                 scanf("%31s", localizacao);
                 listarPorLocalizacao(inicioTransporte, localizacao);
@@ -158,11 +167,11 @@ void menuClienteLogin(int idLogin){
                 getchar();
                 break;
             
-            case 5:
+            case 6:
                 printf("ola");
             break;
 
-            case 6:
+            case 7:
                 printf("Digite o ID do transporte que deseja alugar: ");
                 int id_transporte;
                 scanf("%d", &id_transporte);
