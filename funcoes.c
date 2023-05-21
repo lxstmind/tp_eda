@@ -122,7 +122,7 @@ void menuClienteLogin(int idLogin){
         clear_console();
         printf("M E N U   C L I E N T E   L O G I N\n\n");
         printf("1 Ver dados da conta\n");
-        printf("2 Atualizar dados e/ou carregar saldo na conta\n");
+        printf("2 Alterar dados e/ou carregar saldo na conta\n");
         printf("3 Listar todos os transportes disponiveis\n");
         printf("4 Listar os transportes disponiveis por localizacao\n");
         printf("5 Listar os transportes mais proximos disponiveis\n");

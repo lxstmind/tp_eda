@@ -118,7 +118,7 @@ void alterarDadosCliente(cliente* inicio, int id) {
         printf("Escolha o que deseja alterar:\n");
         printf("1 - Nome: %s\n", clienteAtual->nome);
         printf("2 - NIF: %d\n", clienteAtual->nif);
-        printf("3 - Atualizar localizacao atual: %s\n", clienteAtual->morada);
+        printf("3 - Morada: %s\n", clienteAtual->morada);
         printf("4 - Senha\n");
         printf("5 - Carregar saldo: %.2f\n", clienteAtual->saldo);
         printf("0 - Confirmar alteracao de dados e sair\n");
@@ -140,7 +140,7 @@ void alterarDadosCliente(cliente* inicio, int id) {
                 } while (clienteAtual->nif <= 0 || clienteAtual->nif < 100000000 || clienteAtual->nif > 999999999);
                 break;
             case 3:
-                printf("Onde se encontra neste preciso momento?\n");
+                printf("Qual e a sua nova morada?\n");
                 scanf("%s", clienteAtual->morada);
                 break;
             case 4:

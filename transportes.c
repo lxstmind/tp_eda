@@ -394,10 +394,9 @@ void alugarTransporte(transporte* inicioTransporte, cliente* inicioCliente, int 
     // Final da viagem
     time_t data_fim = time(NULL);
     printf("Transporte %d devolvido com sucesso!\n", id_transporte);
-    printf("Localizacao atual: %s\n", transporte_alugado->localizacao);
     printf("Data do final da viagem: %s", ctime(&data_fim));
 
-    // Solicita a localização no final da viagem
+    // Solicita a localizacao no final da viagem
     char nova_localizacao[50];
     printf("Digite a localizacao no final da viagem: ");
     fgets(nova_localizacao, 50, stdin);
@@ -405,37 +404,55 @@ void alugarTransporte(transporte* inicioTransporte, cliente* inicioCliente, int 
     // Remove o caractere de nova linha do final da string
     nova_localizacao[strcspn(nova_localizacao, "\n")] = '\0';
 
-    // Atualiza a localização no transporte
-    strncpy(transporte_alugado->localizacao, nova_localizacao, MAX_MORADA_LENGTH);
+    // Lê o arquivo "arestas.txt" para obter a distância entre os pontos de origem e destino
+    FILE* fp_arestas = fopen("arestas.txt", "r");
+    if (fp_arestas == NULL) {
+        printf("Erro ao abrir o arquivo arestas.txt\n");
+        return;
+    }
 
-    // Calcula o tempo de uso do transporte
-    double tempo_uso_segundos = difftime(data_fim, data_inicio);
-    double tempo_uso_minutos = tempo_uso_segundos / 60.0;
-    double tempo_uso_horas = tempo_uso_minutos / 60.0;
-    printf("Tempo de uso: %.2f horas\n", tempo_uso_horas);
+    char linha_aresta[100];
+    char ponto_origem[50];
+    char ponto_destino[50];
+    float distancia = 0;
 
-    // Calcula o custo da viagem
-    double custo_minuto = transporte_alugado->custo;
-    double custo_total = custo_minuto * tempo_uso_minutos;
-    printf("Custo total da viagem: %.2f\n", custo_total);
+    while (fgets(linha_aresta, sizeof(linha_aresta), fp_arestas)) {
+        if (sscanf(linha_aresta, "%[^;];%[^;];%f", ponto_origem, ponto_destino, &distancia) == 3) {
+            if (strcmp(transporte_alugado->localizacao, ponto_origem) == 0 && strcmp(nova_localizacao, ponto_destino) == 0) {
+                break;
+            }
+        }
+    }
 
-    // Verifica se o saldo é suficiente para cobrir o custo total da viagem
+    fclose(fp_arestas);
+
+    // Calcula o custo total da viagem com base na distância
+    float custo_total = distancia * transporte_alugado->custo;
+
+    // Verifica o saldo do cliente atual
     if (cliente_atual == NULL) {
-        printf("Erro: ponteiro de cliente invalido.\n");
+        printf("Cliente nao valido.\n");
         return;
     }
 
     if (cliente_atual->saldo < custo_total) {
-        printf("Saldo insuficiente para cobrir o custo total da viagem.\n");
+        printf("Saldo insuficiente. Custo total da viagem: %.2f\n", custo_total);
         return;
     }
 
     // Subtrai o custo total da viagem do saldo do cliente
-    double novo_saldo = cliente_atual->saldo - custo_total;
+    float novo_saldo = cliente_atual->saldo - custo_total;
     cliente_atual->saldo = novo_saldo;
     printf("Custo da viagem debitado da conta. Saldo restante: %.2f\n", novo_saldo);
 
-    // Atualiza a localização do transporte no arquivo "transportes.txt"
+    // Calcula o número de horas decorridas durante a viagem
+    double segundos_viagem = difftime(data_fim, data_inicio);
+    double horas_viagem = segundos_viagem / 3600.0;
+
+    // Calcula a alteração da autonomia do transporte
+    float alteracao_autonomia = -20.0 * horas_viagem;  // Reduz 20% por hora de viagem
+
+    // Atualiza a autonomia do transporte no arquivo "transportes.txt"
     FILE* fp_transporte = fopen("transportes.txt", "r");
     FILE* fp_temp = fopen("temp.txt", "w");
     if (fp_transporte == NULL || fp_temp == NULL) {
@@ -443,18 +460,18 @@ void alugarTransporte(transporte* inicioTransporte, cliente* inicioCliente, int 
         return;
     }
 
-    char linha[100];
-    while (fgets(linha, sizeof(linha), fp_transporte)) {
+    char linha_transporte[100];
+    while (fgets(linha_transporte, sizeof(linha_transporte), fp_transporte)) {
         int id, tipo;
         char localizacao[MAX_MORADA_LENGTH + 1];
-        float custo_min, custo_km, autonomia;
+        float custo, bat, aut;
 
-        if (sscanf(linha, "%d;%d;%[^;];%f;%f;%f", &id, &tipo, localizacao, &custo_min, &custo_km, &autonomia) == 6) {
+        if (sscanf(linha_transporte, "%d;%d;%[^;];%f;%f;%f", &id, &tipo, localizacao, &custo, &bat, &aut) == 6) {
             if (id == id_transporte) {
-                fprintf(fp_temp, "%d;%d;%s;%.2f;%.2f;%.2f\n", id, tipo, nova_localizacao, custo_min, custo_km, autonomia);
-            } else {
-                fprintf(fp_temp, "%d;%d;%s;%.2f;%.2f;%.2f\n", id, tipo, localizacao, custo_min, custo_km, autonomia);
+                strncpy(localizacao, nova_localizacao, MAX_MORADA_LENGTH);
+                aut += alteracao_autonomia;
             }
+            fprintf(fp_temp, "%d;%d;%s;%.2f;%.2f;%.2f\n", id, tipo, localizacao, custo, bat, aut);
         }
     }
 
@@ -485,5 +502,5 @@ void alugarTransporte(transporte* inicioTransporte, cliente* inicioCliente, int 
     remove("clientes.txt");
     rename("temp.txt", "clientes.txt");
 
-    printf("Saldo do cliente atualizado com sucesso!\n");
+    printf("Viagem concluida com sucesso!\n");
 }
