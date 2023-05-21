@@ -397,6 +397,17 @@ void alugarTransporte(transporte* inicioTransporte, cliente* inicioCliente, int 
     printf("Localizacao atual: %s\n", transporte_alugado->localizacao);
     printf("Data do final da viagem: %s", ctime(&data_fim));
 
+    // Solicita a localização no final da viagem
+    char nova_localizacao[50];
+    printf("Digite a localizacao no final da viagem: ");
+    fgets(nova_localizacao, 50, stdin);
+
+    // Remove o caractere de nova linha do final da string
+    nova_localizacao[strcspn(nova_localizacao, "\n")] = '\0';
+
+    // Atualiza a localização no transporte
+    strncpy(transporte_alugado->localizacao, nova_localizacao, MAX_MORADA_LENGTH);
+
     // Calcula o tempo de uso do transporte
     double tempo_uso_segundos = difftime(data_fim, data_inicio);
     double tempo_uso_minutos = tempo_uso_segundos / 60.0;
@@ -424,20 +435,55 @@ void alugarTransporte(transporte* inicioTransporte, cliente* inicioCliente, int 
     cliente_atual->saldo = novo_saldo;
     printf("Custo da viagem debitado da conta. Saldo restante: %.2f\n", novo_saldo);
 
-    // atualiza o saldo do ficheiro
-    FILE* fp = fopen("clientes.txt", "w+");
-    if (fp == NULL) {
-        printf("Erro ao abrir o ficheiro.\n");
+    // Atualiza a localização do transporte no arquivo "transportes.txt"
+    FILE* fp_transporte = fopen("transportes.txt", "r");
+    FILE* fp_temp = fopen("temp.txt", "w");
+    if (fp_transporte == NULL || fp_temp == NULL) {
+        printf("Erro ao abrir os ficheiros.\n");
         return;
     }
 
-    // escreve o saldo do cliente atualizado no ficheiro
+    char linha[100];
+    while (fgets(linha, sizeof(linha), fp_transporte)) {
+        int id, tipo;
+        char localizacao[MAX_MORADA_LENGTH + 1];
+        float custo_min, custo_km, autonomia;
+
+        if (sscanf(linha, "%d;%d;%[^;];%f;%f;%f", &id, &tipo, localizacao, &custo_min, &custo_km, &autonomia) == 6) {
+            if (id == id_transporte) {
+                fprintf(fp_temp, "%d;%d;%s;%.2f;%.2f;%.2f\n", id, tipo, nova_localizacao, custo_min, custo_km, autonomia);
+            } else {
+                fprintf(fp_temp, "%d;%d;%s;%.2f;%.2f;%.2f\n", id, tipo, localizacao, custo_min, custo_km, autonomia);
+            }
+        }
+    }
+
+    fclose(fp_transporte);
+    fclose(fp_temp);
+
+    // Substitui o arquivo original pelo arquivo temporário
+    remove("transportes.txt");
+    rename("temp.txt", "transportes.txt");
+
+    // Atualiza o saldo do cliente no arquivo "clientes.txt"
+    FILE* fp_cliente = fopen("clientes.txt", "r");
+    fp_temp = fopen("temp.txt", "w");
+    if (fp_cliente == NULL || fp_temp == NULL) {
+        printf("Erro ao abrir os ficheiros.\n");
+        return;
+    }
+
     while (inicioCliente != NULL) {
-        fprintf(fp, "%d;%s;%s;%d;%s;%.2f\n", inicioCliente->id, inicioCliente->nome, inicioCliente->password, inicioCliente->nif, inicioCliente->morada, inicioCliente->saldo);
+        fprintf(fp_temp, "%d;%s;%s;%d;%s;%.2f\n", inicioCliente->id, inicioCliente->nome, inicioCliente->password, inicioCliente->nif, inicioCliente->morada, inicioCliente->saldo);
         inicioCliente = inicioCliente->seguinte;
     }
 
-    fclose(fp);
+    fclose(fp_cliente);
+    fclose(fp_temp);
+
+    // Substitui o arquivo original pelo arquivo temporário
+    remove("clientes.txt");
+    rename("temp.txt", "clientes.txt");
 
     printf("Saldo do cliente atualizado com sucesso!\n");
 }

@@ -1,1 +1,1 @@
-1;joao;pass;123333444;ipca.ipca.ipca;38.51
+1;joao;pass;123333444;ipca.ipca.ipca;37.35
