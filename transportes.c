@@ -397,28 +397,33 @@ void alugarTransporte(transporte* inicioTransporte, cliente* inicioCliente, int 
     printf("Data do final da viagem: %s", ctime(&data_fim));
 
     // Solicita a localizacao no final da viagem
-    char nova_localizacao[50];
+    char nova_localizacao[MAX_LOCAL_LENGTH];
     printf("Digite a localizacao no final da viagem: ");
-    fgets(nova_localizacao, 50, stdin);
+    fgets(nova_localizacao, MAX_LOCAL_LENGTH, stdin);
 
     // Remove o caractere de nova linha do final da string
     nova_localizacao[strcspn(nova_localizacao, "\n")] = '\0';
 
-    // Lê o arquivo "arestas.txt" para obter a distância entre os pontos de origem e destino
+    // Calcula a distância percorrida
+    float distancia_percorrida = 0.0;
+
+    // Lê as informações de distância do arquivo "arestas.txt"
     FILE* fp_arestas = fopen("arestas.txt", "r");
     if (fp_arestas == NULL) {
-        printf("Erro ao abrir o arquivo arestas.txt\n");
+        printf("Erro ao abrir o arquivo de arestas.\n");
         return;
     }
 
     char linha_aresta[MAX_LOCAL_LENGTH];
-    char ponto_origem[50];
-    char ponto_destino[50];
-    float distancia = 0;
+    char ponto_partida[MAX_LOCAL_LENGTH];
+    char ponto_chegada[MAX_LOCAL_LENGTH];
+    float distancia;
 
     while (fgets(linha_aresta, sizeof(linha_aresta), fp_arestas)) {
-        if (sscanf(linha_aresta, "%[^;];%[^;];%f", ponto_origem, ponto_destino, &distancia) == 3) {
-            if (strcmp(transporte_alugado->localizacao, ponto_origem) == 0 && strcmp(nova_localizacao, ponto_destino) == 0) {
+        if (sscanf(linha_aresta, "%[^;];%[^;];%f", ponto_partida, ponto_chegada, &distancia) == 3) {
+            if (strcmp(ponto_partida, transporte_alugado->localizacao) == 0 &&
+                strcmp(ponto_chegada, nova_localizacao) == 0) {
+                distancia_percorrida += distancia;
                 break;
             }
         }
@@ -426,8 +431,53 @@ void alugarTransporte(transporte* inicioTransporte, cliente* inicioCliente, int 
 
     fclose(fp_arestas);
 
-    // Calcula o custo total da viagem com base na distância
-    float custo_total = distancia * transporte_alugado->custo;
+    // Atualiza a localizacao e a bateria do transporte no arquivo "transportes.txt"
+    FILE* fp_transporte = fopen("transportes.txt", "r");
+    FILE* fp_temp = fopen("temp.txt", "w");
+    if (fp_transporte == NULL || fp_temp == NULL) {
+        printf("Erro ao abrir os arquivos.\n");
+        return;
+    }
+
+    char linha_transporte[MAX_LOCAL_LENGTH];
+    while (fgets(linha_transporte, sizeof(linha_transporte), fp_transporte)) {
+        int id, tipo;
+        char localizacao[MAX_LOCAL_LENGTH + 1];
+        float custo, bateria, autonomia;
+
+        if (sscanf(linha_transporte, "%d;%d;%[^;];%f;%f;%f", &id, &tipo, localizacao, &custo, &bateria, &autonomia) == 6) {
+            if (id == id_transporte) {
+                strncpy(localizacao, nova_localizacao, MAX_LOCAL_LENGTH);
+
+                // Calcula a diferença de tempo em horas
+                double diferenca_tempo = difftime(data_fim, data_inicio);
+                double horas_viagem = diferenca_tempo / 3600.0;
+
+                // Reduz a bateria em 50% a cada hora de viagem
+                bateria -= (horas_viagem * 0.5);
+                if (bateria < 0) {
+                    bateria = 0;
+                }
+
+                // Reduz a autonomia com base na distância percorrida
+                autonomia -= distancia_percorrida;
+                if (autonomia < 0) {
+                    autonomia = 0;
+                }
+            }
+            fprintf(fp_temp, "%d;%d;%s;%.2f;%.2f;%.2f\n", id, tipo, localizacao, custo, bateria, autonomia);
+        }
+    }
+
+    fclose(fp_transporte);
+    fclose(fp_temp);
+
+    // Substitui o arquivo original pelo arquivo temporário
+    remove("transportes.txt");
+    rename("temp.txt", "transportes.txt");
+
+    // Calcula o custo total da viagem
+    float custo_total = transporte_alugado->custo;
 
     // Verifica o saldo do cliente atual
     if (cliente_atual == NULL) {
@@ -444,63 +494,6 @@ void alugarTransporte(transporte* inicioTransporte, cliente* inicioCliente, int 
     float novo_saldo = cliente_atual->saldo - custo_total;
     cliente_atual->saldo = novo_saldo;
     printf("Custo da viagem debitado da conta. Saldo restante: %.2f\n", novo_saldo);
-
-    // Calcula o número de horas decorridas durante a viagem
-    double segundos_viagem = difftime(data_fim, data_inicio);
-    double horas_viagem = segundos_viagem / 3600.0;
-
-    // Calcula a alteração da autonomia do transporte
-    float alteracao_autonomia = -20.0 * horas_viagem;  // Reduz 20% por hora de viagem
-
-    // Atualiza a autonomia do transporte no arquivo "transportes.txt"
-    FILE* fp_transporte = fopen("transportes.txt", "r");
-    FILE* fp_temp = fopen("temp.txt", "w");
-    if (fp_transporte == NULL || fp_temp == NULL) {
-        printf("Erro ao abrir os ficheiros.\n");
-        return;
-    }
-
-    char linha_transporte[MAX_LOCAL_LENGTH];
-    while (fgets(linha_transporte, sizeof(linha_transporte), fp_transporte)) {
-        int id, tipo;
-        char localizacao[MAX_MORADA_LENGTH + 1];
-        float custo, bat, aut;
-
-        if (sscanf(linha_transporte, "%d;%d;%[^;];%f;%f;%f", &id, &tipo, localizacao, &custo, &bat, &aut) == 6) {
-            if (id == id_transporte) {
-                strncpy(localizacao, nova_localizacao, MAX_MORADA_LENGTH);
-                aut += alteracao_autonomia;
-            }
-            fprintf(fp_temp, "%d;%d;%s;%.2f;%.2f;%.2f\n", id, tipo, localizacao, custo, bat, aut);
-        }
-    }
-
-    fclose(fp_transporte);
-    fclose(fp_temp);
-
-    // Substitui o arquivo original pelo arquivo temporário
-    remove("transportes.txt");
-    rename("temp.txt", "transportes.txt");
-
-    // Atualiza o saldo do cliente no arquivo "clientes.txt"
-    FILE* fp_cliente = fopen("clientes.txt", "r");
-    fp_temp = fopen("temp.txt", "w");
-    if (fp_cliente == NULL || fp_temp == NULL) {
-        printf("Erro ao abrir os ficheiros.\n");
-        return;
-    }
-
-    while (inicioCliente != NULL) {
-        fprintf(fp_temp, "%d;%s;%s;%d;%s;%.2f\n", inicioCliente->id, inicioCliente->nome, inicioCliente->password, inicioCliente->nif, inicioCliente->morada, inicioCliente->saldo);
-        inicioCliente = inicioCliente->seguinte;
-    }
-
-    fclose(fp_cliente);
-    fclose(fp_temp);
-
-    // Substitui o arquivo original pelo arquivo temporário
-    remove("clientes.txt");
-    rename("temp.txt", "clientes.txt");
 
     printf("Viagem concluida com sucesso!\n");
 }

@@ -2,5 +2,4 @@ erros:
 função de alugar transportes não está a retirar a bateria nem a retirar corretamente a autonomia depois de uma viagem;
 
 falta:
-associar o id ao lugar para facilitar aos clientes;
 apresentar num raio de x metros os meios de transportes disponiveis;
