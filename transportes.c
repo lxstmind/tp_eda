@@ -364,6 +364,13 @@ void alugarTransporte(transporte* inicioTransporte, cliente* inicioCliente, int 
     // Procura o transporte com o ID indicado na lista de transportes
     transporte* transporte_alugado = NULL;
     transporte* transporte_atual = inicioTransporte;
+    char linha_aresta[MAX_LOCAL_LENGTH];
+    char ponto_partida[MAX_LOCAL_LENGTH];
+    char ponto_chegada[MAX_LOCAL_LENGTH];
+    char nova_localizacao[MAX_LOCAL_LENGTH];
+    char str_data_inicio[TAM];
+    float distancia;
+
     while (transporte_atual != NULL) {
         if (transporte_atual->id == id_transporte) {
             transporte_alugado = transporte_atual;
@@ -382,8 +389,7 @@ void alugarTransporte(transporte* inicioTransporte, cliente* inicioCliente, int 
     printf("Transporte %d alugado com sucesso!\n", id_transporte);
     printf("Localizacao atual: %s\n", transporte_alugado->localizacao);
     time_t data_inicio = time(NULL);
-    char str_data_inicio[20];
-    strftime(str_data_inicio, 20, "%d/%m/%Y %H:%M:%S", localtime(&data_inicio));
+    strftime(str_data_inicio, TAM, "%d/%m/%Y %H:%M:%S", localtime(&data_inicio));
     printf("Data de inicio da viagem: %s\n", str_data_inicio);
 
     // Aguarda o usuário indicar o fim da viagem
@@ -397,7 +403,6 @@ void alugarTransporte(transporte* inicioTransporte, cliente* inicioCliente, int 
     printf("Data do final da viagem: %s", ctime(&data_fim));
 
     // Solicita a localizacao no final da viagem
-    char nova_localizacao[MAX_LOCAL_LENGTH];
     printf("Digite a localizacao no final da viagem: ");
     fgets(nova_localizacao, MAX_LOCAL_LENGTH, stdin);
 
@@ -413,11 +418,6 @@ void alugarTransporte(transporte* inicioTransporte, cliente* inicioCliente, int 
         printf("Erro ao abrir o arquivo de arestas.\n");
         return;
     }
-
-    char linha_aresta[MAX_LOCAL_LENGTH];
-    char ponto_partida[MAX_LOCAL_LENGTH];
-    char ponto_chegada[MAX_LOCAL_LENGTH];
-    float distancia;
 
     while (fgets(linha_aresta, sizeof(linha_aresta), fp_arestas)) {
         if (sscanf(linha_aresta, "%[^;];%[^;];%f", ponto_partida, ponto_chegada, &distancia) == 3) {
