@@ -1,1 +1,2 @@
 1;joao;pass;123333444;rolico.angico.almeiroes;956.84
+2;diogo;pass;444698001;bocal.sardas.sorvetes;365.54

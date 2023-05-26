@@ -8,3 +8,13 @@
 8;2;almeiroes.pacoquinhas.valem;1.50;3.00;10.00
 9;1;bocal.sardas.sorvetes;4.00;30.00;100.00
 10;2;bocal.sardas.sorvetes;5.00;80.00;210.00
+11;1;araras.quao.metabolismos;3.50;50.00;150.00
+12;2;araras.quao.metabolismos;3.00;60.00;230.00
+13;1;rolico.angico.almeiroes;4.00;25.00;55.00
+14;2;rolico.angico.almeiroes;9.00;55.00;100.00
+15;1;velhas.cigano.junte;4.50;50.00;100.00
+16;2;velhas.cigano.junte;2.50;50.00;250.00
+17;1;almeiroes.pacoquinhas.valem;2.50;50.50;150.00
+18;2;almeiroes.pacoquinhas.valem;1.50;15.00;30.00
+19;1;bocal.sardas.sorvetes;4.00;90.00;500.00
+20;2;bocal.sardas.sorvetes;5.00;70.00;190.00

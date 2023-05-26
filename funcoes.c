@@ -3,6 +3,12 @@
 #include <string.h>
 #include "header.h"
 
+/**
+ * @brief função que retorna um id disponivel para atribuir a um conta ou transporte criado com base no conteudo do ficheiro
+ * 
+ * @param file_name nome do ficheiro a ser verificado   
+ * @return int 
+ */
 int getId(char * file_name) {
     char buffer[MAX_LOCAL_LENGTH + MAX_MORADA_LENGTH + MAX_NAME_LENGTH + MAX_PASSWORD_LENGTH + 1]; //tamanho todo da minha linha
     FILE *fp = fopen(file_name, "r");
@@ -20,6 +26,10 @@ int getId(char * file_name) {
     return id;
 }
 
+/**
+ * @brief função que limpa a consola
+ * 
+ */
 void clear_console(){
     system("@cls||clear");
 }
@@ -27,7 +37,10 @@ void clear_console(){
 
 // C L I E N T E S
 
-
+/**
+ * @brief menu para os clientes iniciarem sessão ou criarem um nova conta
+ * 
+ */
 void menuCliente(){
     int opcaoCliente = 0;
     int id = getId("clientes.txt");
@@ -99,6 +112,11 @@ void menuCliente(){
             } while (opcaoCliente != 0);
 }
 
+/**
+ * @brief menu para os clientes depois de iniciarem sessão
+ * 
+ * @param idLogin inteiro que guarda o id do cliente logado
+ */
 void menuClienteLogin(int idLogin){
     int opcao=0;
     int id = getId("clientes.txt");
@@ -179,8 +197,6 @@ void menuClienteLogin(int idLogin){
                 getchar();
                 break;
 
-        break;
-
             case 7:
                 printf("Digite o ID do transporte que deseja alugar: ");
                 int id_transporte;
@@ -196,7 +212,10 @@ void menuClienteLogin(int idLogin){
 
 // G E S T O R E S
 
-
+/**
+ * @brief menu para os gestores iniciarem sessão ou criarem um nova conta
+ * 
+ */
 void menuGestor(){
     int opcaoGestor = 0;
     gestor* inicio = lerGestores();
@@ -253,6 +272,10 @@ void menuGestor(){
         } while(opcaoGestor!=0);
 }
 
+/**
+ * @brief menu para gestores depois de efetuar o login
+ * 
+ */
 void menuGestorLogin(){
     int opcao=0;
     int id = getId("transportes.txt");
@@ -469,7 +492,10 @@ void menuGestorLogin(){
 
 // M E N U
 
-
+/**
+ * @brief menu inicial
+ * 
+ */
 void menu(){
 	int opcaoMenu = 0;
     do {

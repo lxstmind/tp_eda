@@ -3,8 +3,13 @@
 #include <stdlib.h>
 #include "header.h"
 
-// Criar um novo vértice
-// Devolve 1 em caso de sucesso ou 0 caso contrário
+/**
+ * @brief cria um novo vertice no grado
+ * 
+ * @param g apontador para o grafo 
+ * @param novoId id do novo vertice
+ * @return retorna um inteiro 1 em caso de sucesso ou 0 em caso de falha
+ */
 int criarVertice(Grafo *g, char novoId[])
 {Grafo novo = malloc(sizeof(struct registo1));
  if (novo!=NULL)
@@ -17,7 +22,13 @@ int criarVertice(Grafo *g, char novoId[])
  else return(0);
 }
 
-// Devolve 1 se o vertice existe no grafo ou 0 caso contrário
+/**
+ * @brief verifica a existencia de um vertice
+ * 
+ * @param g apontador para o grafo
+ * @param vertice vertice a ser analisado
+ * @return retorna um inteiro 1 em caso de sucesso ou 0 em caso de falha
+ */
 int existeVertice(Grafo g, char vertice[])
 {while (g!=NULL)
  {if (strcmp(g->vertice,vertice)==0) return(1);
@@ -26,8 +37,15 @@ int existeVertice(Grafo g, char vertice[])
  return(0);
 }
 
-// Criar uma nova aresta
-// Devolve 1 em caso de sucesso ou 0 caso contrário
+/**
+ * @brief cria uma nova aresta para ligar dois pontos já existentes
+ * 
+ * @param g apontador para o grafo
+ * @param vOrigem id do vertice de origem
+ * @param vDestino id do vertice de destino
+ * @param peso inteiro que representa o peso da aresta
+ * @return retorna um inteiro 1 em caso de sucesso ou 0 em caso de falha
+ */
 int criarAresta(Grafo g, char vOrigem[], char vDestino[], float peso)
 {Adjacente novo;
  if (existeVertice(g,vOrigem) && existeVertice(g,vDestino))
@@ -46,6 +64,10 @@ int criarAresta(Grafo g, char vOrigem[], char vDestino[], float peso)
  else return(0);
 }
 
+/**
+ * @brief função que remove uma localização do ficheiro de localizações
+ * 
+ */
 void removerLocalizacao() {
     char idRemover[100];
     printf("Informe o ID da localizacao a ser removida: ");
@@ -99,6 +121,10 @@ void removerLocalizacao() {
     }
 }
 
+/**
+ * @brief função que remove uma aresta do ficheiro de arestas
+ * 
+ */
 void removerAresta() {
     char pontoRemover[MAX_LOCAL_LENGTH];
     char arestaRemover[MAX_LOCAL_LENGTH];
@@ -158,6 +184,11 @@ void removerAresta() {
     }
 }
 
+/**
+ * @brief função que listar arestas de um ponto especifico
+ * 
+ * @param ponto ponto para ver as suas arestas
+ */
 void listarArestasPorPonto(const char* ponto) {
     // Abre o ficheiro para leitura
     FILE* fp = fopen("arestas.txt", "r");
@@ -190,6 +221,11 @@ void listarArestasPorPonto(const char* ponto) {
     }
 }
 
+/**
+ * @brief função que emprime na consola a localização correspondente ao seu id
+ * 
+ * @param id id da localização
+ */
 void imprimirLocalizacao(const char* id) {
     FILE* arquivo = fopen("localizacoes.txt", "r");
     if (arquivo == NULL) {
@@ -214,6 +250,12 @@ void imprimirLocalizacao(const char* id) {
     printf("ID nao encontrado.\n");
 }
 
+/**
+ * @brief função que lista um tipo de transportes a menos de 1km de um ponto especifico 
+ * 
+ * @param ponto ponto onde está a cliente
+ * @param tipoTransporte inteiro que representa o tipo do transporte
+ */
 void listarTransportesMaisPerto(const char* ponto, int tipoTransporte) {
     char pontoAtual[MAX_LOCAL_LENGTH];
     char arestaAtual[MAX_LOCAL_LENGTH];

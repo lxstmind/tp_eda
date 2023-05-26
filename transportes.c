@@ -357,8 +357,9 @@ void removerTransporte(){
  * @brief função que permite aos clientes alugar os transportes
  * 
  * @param inicioTransporte apontador para o inicio da lista de transportes
- * @param id_transporte id correspondente ao transporte alugado
- * @param saldo dinheiro que o utilizador tem na sua conta para alugar transportes
+ * @param inicioCliente apontador para o inicio da lista de clientes
+ * @param id_transporte  id correspondente ao transporte alugado
+ * @param cliente_atual id correspondente ao cliente atual
  */
 void alugarTransporte(transporte* inicioTransporte, cliente* inicioCliente, int id_transporte, cliente* cliente_atual) {
     // Procura o transporte com o ID indicado na lista de transportes
