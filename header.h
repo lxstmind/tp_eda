@@ -124,5 +124,6 @@ void removerLocalizacao();
 void removerAresta();
 void listarArestasPorPonto(const char* ponto);
 void imprimirLocalizacao(const char* id);
+void listarTransportesMaisPerto(const char* ponto, int tipoTransporte);
 
 #endif

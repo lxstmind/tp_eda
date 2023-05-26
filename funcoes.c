@@ -102,12 +102,13 @@ void menuCliente(){
 void menuClienteLogin(int idLogin){
     int opcao=0;
     int id = getId("clientes.txt");
-    int tipo;
+    int tipo, tipoTransporte;
     float bat=0;
     float aut=0;
     float saldo=0;
     char localizacao[MAX_MORADA_LENGTH +1];
     char idLocal[MAX_LOCAL_LENGTH];
+    char ponto[MAX_LOCAL_LENGTH];
     cliente* inicioCliente = lerClientes();
     transporte* inicioTransporte = lerTransportes();
 
@@ -168,8 +169,17 @@ void menuClienteLogin(int idLogin){
                 break;
             
             case 6:
-                printf("ola");
-            break;
+                printf("Qual e a sua localizacao atual?\n");
+                scanf("%s", ponto);
+                printf("Digite o tipo de transporte (1 - Trotinete, 2 - Bicicleta)\n");
+                scanf("%d", &tipoTransporte);
+        
+                listarTransportesMaisPerto(ponto, tipoTransporte);
+                fflush(stdin);
+                getchar();
+                break;
+
+        break;
 
             case 7:
                 printf("Digite o ID do transporte que deseja alugar: ");
