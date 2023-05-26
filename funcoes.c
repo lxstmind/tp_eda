@@ -7,7 +7,7 @@
  * @brief função que retorna um id disponivel para atribuir a um conta ou transporte criado com base no conteudo do ficheiro
  * 
  * @param file_name nome do ficheiro a ser verificado   
- * @return int 
+ * @return retorno o novo id
  */
 int getId(char * file_name) {
     char buffer[MAX_LOCAL_LENGTH + MAX_MORADA_LENGTH + MAX_NAME_LENGTH + MAX_PASSWORD_LENGTH + 1]; //tamanho todo da minha linha
@@ -54,16 +54,17 @@ void menuCliente(){
     do{
         clear_console();
         printf("M E N U   C L I E N T E\n\n");
-        printf("1 Iniciar Sessao\n");
-        printf("2 Criar Conta\n");
-        printf("0 Voltar atras\n");
+        printf("1. Iniciar Sessao\n");
+        printf("2. Criar Conta\n");
+        printf("0. Voltar atras\n\n");
+        printf("Escolha uma opcao: ");
         scanf("%d", &opcaoCliente);
 
         switch(opcaoCliente){
             case 1:
-            printf("Introduza o seu ID:\n");
+            printf("Introduza o seu ID: ");
             scanf("%d", &id_received);
-            printf("Introduza a sua password:\n");
+            printf("Introduza a sua password: ");
             scanf("%s", password);
 
             if (inicio != NULL && verifLoginCliente(inicio, id_received, password) != 0 ){
@@ -141,14 +142,15 @@ void menuClienteLogin(int idLogin){
     do{
         clear_console();
         printf("M E N U   C L I E N T E   L O G I N\n\n");
-        printf("1 Ver dados da conta\n");
-        printf("2 Alterar dados e/ou carregar saldo na conta\n");
-        printf("3 Listar por ID as localizacoes\n");
-        printf("4 Listar todos os transportes disponiveis\n");
-        printf("5 Listar os transportes disponiveis por localizacao\n");
-        printf("6 Listar os transportes mais proximos disponiveis\n");
-        printf("7 Alugar transporte\n");
-        printf("0 Voltar atras\n");
+        printf("1. Ver dados da conta\n");
+        printf("2. Alterar dados e/ou carregar saldo na conta\n");
+        printf("3. Listar por ID as localizacoes\n");
+        printf("4. Listar todos os transportes disponiveis\n");
+        printf("5. Listar os transportes disponiveis por localizacao\n");
+        printf("6. Listar os transportes mais proximos disponiveis\n");
+        printf("7. Alugar transporte\n");
+        printf("0. Voltar atras\n\n");
+        printf("Escolha uma opcao: ");
         scanf("%d", &opcao);
 
         switch(opcao){
@@ -226,16 +228,17 @@ void menuGestor(){
     do {
         clear_console();
         printf("M E N U   G E S T O R\n\n");
-        printf("1 Iniciar Sessao\n");
-        printf("2 Criar Conta\n");
-        printf("0 Voltar atras\n");
+        printf("1. Iniciar Sessao\n");
+        printf("2. Criar Conta\n");
+        printf("0. Voltar atras\n\n");
+        printf("Escolha uma opcao: ");
         scanf("%d", &opcaoGestor);
 
         switch(opcaoGestor){
             case 1:
-            printf("Introduza o seu ID:\n");
+            printf("Introduza o seu ID: ");
             scanf("%d", &id_received);
-            printf("Introduza a sua password:\n");
+            printf("Introduza a sua password: ");
             scanf("%s", password);
 
             if (inicio != NULL && verifLoginGestor(inicio, id_received, password) != 0 ){
@@ -299,22 +302,23 @@ void menuGestorLogin(){
     do {
         clear_console();
         printf("M E N U   G E S T O R   L O G I N\n\n");
-        printf("1 Adicionar transporte\n");
-        printf("2 Listar todos os transportes\n");
-        printf("3 Listar transportes por localizacao especifica\n");
-        printf("4 Alterar dados de transportes\n");
-        printf("5 Remover transporte\n");
-        printf("6 Listar clientes\n");
-        printf("7 Alterar dados de cliente\n");
-        printf("8 Remover cliente\n");
-        printf("9 Alterar dados de gestor\n");
-        printf("10 Remover gestor\n");
-        printf("11 Adicionar localizacao\n");
-        printf("12 Adicionar caminho\n");
-        printf("13 Remover localizacao\n");
-        printf("14 Remover caminho\n");
-        printf("15 Listar vertices adjacentes\n");
-        printf("0 Voltar atras\n");
+        printf("1. Adicionar transporte\n");
+        printf("2. Listar todos os transportes\n");
+        printf("3. Listar transportes por localizacao especifica\n");
+        printf("4. Alterar dados de transportes\n");
+        printf("5. Remover transporte\n");
+        printf("6. Listar clientes\n");
+        printf("7. Alterar dados de cliente\n");
+        printf("8. Remover cliente\n");
+        printf("9. Alterar dados de gestor\n");
+        printf("10. Remover gestor\n");
+        printf("11. Adicionar localizacao\n");
+        printf("12. Adicionar caminho\n");
+        printf("13. Remover localizacao\n");
+        printf("14. Remover caminho\n");
+        printf("15. Listar vertices adjacentes\n");
+        printf("0. Voltar atras\n\n");
+        printf("Escolha uma opcao: ");
         scanf("%d", &opcao);
 
         switch(opcao){
@@ -501,9 +505,10 @@ void menu(){
     do {
         clear_console();
         printf("M E N U\n\n");
-        printf("1 Seguir como cliente\n");
-        printf("2 Seguir como gestor\n");
-        printf("0 Sair\n");
+        printf("1. Seguir como cliente\n");
+        printf("2. Seguir como gestor\n");
+        printf("0. Voltar atras\n\n");
+        printf("Escolha uma opcao: ");
         scanf("%d", &opcaoMenu);
 
         switch(opcaoMenu){
