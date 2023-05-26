@@ -1,5 +1,0 @@
-erros:
-função de alugar transportes não está a retirar a bateria nem a retirar corretamente a autonomia depois de uma viagem;
-
-falta:
-apresentar num raio de x metros os meios de transportes disponiveis;
