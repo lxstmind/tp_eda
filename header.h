@@ -96,28 +96,20 @@ typedef struct registo3
   struct registo3 * seguinte;
 } * Meios;
 
-// Representação de um grafo orientado e pesado
 typedef struct registo2
-{char vertice[TAM]; // geocódigo what3words
+{char vertice[TAM];
  float peso;
  struct registo2 * seguinte;
 } * Adjacente;
 
 typedef struct registo1
-{char vertice[TAM]; // geocódigo what3words
+{char vertice[TAM];
  Adjacente adjacentes;
- Meios meios; // Lista ligada com os códigos dos meios de transporte existente
-	      // neste geocódigo
+ Meios meios;
  struct registo1 * seguinte;
 } * Grafo;
 
-// Protótipos
-
-// Criar um novo vértice
-// Devolve 1 em caso de sucesso ou 0 caso contrário
 int criarVertice(Grafo *g, char novoId[]);
-// Criar uma nova aresta
-// Devolve 1 em caso de sucesso ou 0 caso contrário
 int criarAresta(Grafo g, char vOrigem[], char vDestino[], float peso);
 int existeVertice(Grafo g, char vertice[]);
 void removerLocalizacao();
