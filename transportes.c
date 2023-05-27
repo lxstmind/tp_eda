@@ -403,6 +403,48 @@ void alugarTransporte(transporte* inicioTransporte, cliente* inicioCliente, int 
     printf("Transporte %d devolvido com sucesso!\n", id_transporte);
     printf("Data do final da viagem: %s", ctime(&data_fim));
 
+    // Calcula o tempo de uso do transporte
+    double tempo_uso_segundos = difftime(data_fim, data_inicio);
+    double tempo_uso_minutos = tempo_uso_segundos / 60.0;
+    double tempo_uso_horas = tempo_uso_minutos / 60.0;
+    printf("Tempo de uso: %.2f horas\n", tempo_uso_horas);
+
+    // Calcula o custo da viagem
+    double custo_minuto = transporte_alugado->custo;
+    double custo_total = custo_minuto * tempo_uso_minutos;
+    printf("Custo total da viagem: %.2f\n", custo_total);
+
+    // Verifica se o saldo é suficiente para cobrir o custo total da viagem
+    if (cliente_atual == NULL) {
+        printf("Erro: ponteiro de cliente invalido.\n");
+        return;
+    }
+
+    if (cliente_atual->saldo < custo_total) {
+        printf("Saldo insuficiente para cobrir o custo total da viagem.\n");
+        return;
+    }
+
+    // Subtrai o custo total da viagem do saldo do cliente
+    double novo_saldo = cliente_atual->saldo - custo_total;
+    cliente_atual->saldo = novo_saldo;
+    printf("Saldo restante: %.2f\n", novo_saldo);
+
+    // atualiza o saldo do ficheiro
+    FILE* fp = fopen("clientes.txt", "w+");
+    if (fp == NULL) {
+        printf("Erro ao abrir o ficheiro.\n");
+        return;
+    }
+
+    // escreve o saldo do cliente atualizado no ficheiro
+    while (inicioCliente != NULL) {
+        fprintf(fp, "%d;%s;%s;%d;%s;%.2f\n", inicioCliente->id, inicioCliente->nome, inicioCliente->password, inicioCliente->nif, inicioCliente->morada, inicioCliente->saldo);
+        inicioCliente = inicioCliente->seguinte;
+    }
+
+    fclose(fp);
+    
     // Solicita a localizacao no final da viagem
     printf("Digite a localizacao no final da viagem: ");
     fgets(nova_localizacao, MAX_LOCAL_LENGTH, stdin);
@@ -476,25 +518,6 @@ void alugarTransporte(transporte* inicioTransporte, cliente* inicioCliente, int 
     // Substitui o arquivo original pelo arquivo temporário
     remove("transportes.txt");
     rename("temp.txt", "transportes.txt");
-
-    // Calcula o custo total da viagem
-    float custo_total = transporte_alugado->custo;
-
-    // Verifica o saldo do cliente atual
-    if (cliente_atual == NULL) {
-        printf("Cliente nao valido.\n");
-        return;
-    }
-
-    if (cliente_atual->saldo < custo_total) {
-        printf("Saldo insuficiente. Custo total da viagem: %.2f\n", custo_total);
-        return;
-    }
-
-    // Subtrai o custo total da viagem do saldo do cliente
-    float novo_saldo = cliente_atual->saldo - custo_total;
-    cliente_atual->saldo = novo_saldo;
-    printf("Custo da viagem debitado da conta. Saldo restante: %.2f\n", novo_saldo);
 
     printf("Viagem concluida com sucesso!\n");
 }
