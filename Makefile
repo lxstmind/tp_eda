@@ -1,28 +1,30 @@
-CC=gcc
-CFLAGS=-Wall -Wextra
+all: prog
 
-all: main
+prog: main.o funcoes.o clientes.o gestores.o transportes.o grafo.o
+	gcc -g -o prog main.o funcoes.o clientes.o gestores.o transportes.o grafo.o
 
-main: main.o funcoes.o clientes.o gestores.o transportes.o grafo.o
-	$(CC) $(CFLAGS) -o main main.o funcoes.o clientes.o gestores.o transportes.o grafo.o
+main.o: main.c header.h
+	gcc -g -o main.o main.c -c
 
-main.o: main.c
-	$(CC) $(CFLAGS) -c main.c
+funcoes.o: funcoes.c header.h
+	gcc -g -o funcoes.o funcoes.c -c
 
-funcoes.o: funcoes.c
-	$(CC) $(CFLAGS) -c funcoes.c
+clientes.o: clientes.c header.h
+	gcc -g -o clientes.o clientes.c -c
 
-clientes.o: clientes.c
-	$(CC) $(CFLAGS) -c clientes.c
+gestores.o: gestores.c header.h
+	gcc -g -o gestores.o gestores.c -c
 
-gestores.o: gestores.c
-	$(CC) $(CFLAGS) -c gestores.c
+transportes.o: transportes.c header.h
+	gcc -g -o transportes.o transportes.c -c
 
-transportes.o: transportes.c
-	$(CC) $(CFLAGS) -c transportes.c
-
-grafo.o: grafo.c
-	$(CC) $(CFLAGS) -c grafo.c
+grafo.o: grafo.c header.h
+	gcc -g -o grafo.o grafo.c -c
 
 clean:
-	rm -f main *.o
+	del /Q /S *.o prog
+
+run:
+	MinGW32-make clean
+	MinGW32-make all
+	./prog
