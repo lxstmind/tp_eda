@@ -331,20 +331,23 @@ void listarAdjacentesRaio(const char* localizacaoAtual, int tipoTransporte) {
 
     int encontrou = 0;
 
-    // Percorre o grafo para encontrar o ponto atual
+    // Percorre o grafo para encontrar a localização atual
     while (grafo != NULL) {
         if (strcmp(grafo->vertice, localizacaoAtual) == 0) {
-            // Encontrou o ponto atual, percorre os adjacentes
+            // Encontrou a localização atual, percorre os adjacentes
             Adjacente aux = grafo->adjacentes;
             while (aux != NULL) {
-                // Percorre a lista de transportes para encontrar o transporte na localizacao correspondente
-                transporte* transporteAux = inicioTransporte;
-                while (transporteAux != NULL) {
-                    if (strcmp(transporteAux->localizacao, aux->vertice) == 0 && transporteAux->tipo == tipoTransporte) {
-                        printf("ID: %d, Tipo: %d, Custo: %.2f, Bateria: %.2f, Autonomia: %.2f\n", transporteAux->id, transporteAux->tipo, transporteAux->custo, transporteAux->bat, transporteAux->aut);
-                        encontrou = 1;
+                // Verifica o peso da aresta entre a localização atual e a localização adjacente
+                if (aux->peso <= 0.5) {
+                    // Percorre a lista de transportes para encontrar o transporte na localizacao correspondente
+                    transporte* transporteAux = inicioTransporte;
+                    while (transporteAux != NULL) {
+                        if (strcmp(transporteAux->localizacao, aux->vertice) == 0 && transporteAux->tipo == tipoTransporte) {
+                            printf("ID: %d, Tipo: %d, Custo: %.2f, Bateria: %.2f, Autonomia: %.2f\n", transporteAux->id, transporteAux->tipo, transporteAux->custo, transporteAux->bat, transporteAux->aut);
+                            encontrou = 1;
+                        }
+                        transporteAux = transporteAux->seguinte;
                     }
-                    transporteAux = transporteAux->seguinte;
                 }
                 aux = aux->seguinte;
             }
