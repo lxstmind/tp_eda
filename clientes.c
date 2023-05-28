@@ -165,14 +165,14 @@ void alterarDadosCliente(cliente* inicio, int id) {
         }
     } while (opcao != 0);
 
-    // atualiza os dados do arquivo
+    // atualiza os dados do ficheiro
     FILE* fp = fopen("clientes.txt", "w+");
     if (fp == NULL) {
-        printf("Erro ao abrir o arquivo.\n");
+        printf("Erro ao abrir o ficheiro.\n");
         return;
     }
 
-    // escreve todos os clientes atualizados no arquivo
+    // escreve todos os clientes atualizados no ficheiro
     while (inicio != NULL) {
         fprintf(fp, "%d;%s;%s;%d;%s;%.2f\n", inicio->id, inicio->nome, inicio->password, inicio->nif, inicio->morada, inicio->saldo);
         inicio = inicio->seguinte;
@@ -222,22 +222,22 @@ void removerCliente(){
     printf("Informe o ID do cliente a ser removido: ");
     scanf("%d", &idRemover);
 
-    // Abre o arquivo para leitura
+    // Abre o ficheiro para leitura
     FILE* fp = fopen("clientes.txt", "r");
     if(fp == NULL){
-        printf("Erro ao abrir o arquivo de clientes!\n");
+        printf("Erro ao abrir o ficheiro de clientes!\n");
         return;
     }
 
-    // Abre um arquivo temporário para escrita
+    // Abre um ficheiro temporário para escrita
     FILE* fpTemp = fopen("temp.txt", "w");
     if(fpTemp == NULL){
-        printf("Erro ao criar arquivo temporário!\n");
+        printf("Erro ao criar ficheiro temporário!\n");
         fclose(fp);
         return;
     }
 
-    // Percorre o arquivo de clientes linha por linha
+    // Percorre o ficheiro de clientes linha por linha
     char linha[200];
     int encontrou = 0;
     while(fgets(linha, 200, fp)){ //le por cada linha 200 caracteres
@@ -245,7 +245,7 @@ void removerCliente(){
         cliente* cli = malloc(sizeof(cliente));
         sscanf(linha, "%d;%[^;];%[^;];%d;%[^;];%f", &cli->id, cli->password, cli->nome, &cli->nif, cli->morada, &cli->saldo);
 
-        // Se o ID for diferente do ID a ser removido, escreve a linha no arquivo temporário
+        // Se o ID for diferente do ID a ser removido, escreve a linha no ficheiro temporário
         if(cli->id != idRemover){
             fputs(linha, fpTemp);
         } else {
@@ -254,14 +254,14 @@ void removerCliente(){
         }
     }
 
-    // Fecha os arquivos
+    // Fecha os ficheiros
     fclose(fp);
     fclose(fpTemp);
 
-    // Remove o arquivo antigo
+    // Remove o ficheiro antigo
     remove("clientes.txt");
 
-    // Renomeia o arquivo temporário para o nome original
+    // Renomeia o ficheiro temporário para o nome original
     rename("temp.txt", "clientes.txt");
 
     if(encontrou){

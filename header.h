@@ -91,22 +91,22 @@ void alugarTransporte(transporte* inicioTransporte, cliente* inicioCliente, int 
 
 // F A S E   2
 
-typedef struct registo3
-{ int codigo;
-  struct registo3 * seguinte;
+typedef struct registo3 { 
+    int codigo;
+    struct registo3 * seguinte;
 } * Meios;
 
-typedef struct registo2
-{char vertice[TAM];
- float peso;
- struct registo2 * seguinte;
+typedef struct registo2 {
+    char vertice[TAM];
+    float peso;
+    struct registo2* seguinte;
 } * Adjacente;
 
-typedef struct registo1
-{char vertice[TAM];
- Adjacente adjacentes;
- Meios meios;
- struct registo1 * seguinte;
+typedef struct registo1 {
+    char vertice[TAM];
+    Adjacente adjacentes;
+    Meios meios;
+    struct registo1* seguinte;
 } * Grafo;
 
 int criarVertice(Grafo *g, char novoId[]);
@@ -114,8 +114,10 @@ int criarAresta(Grafo g, char vOrigem[], char vDestino[], float peso);
 int existeVertice(Grafo g, char vertice[]);
 void removerLocalizacao();
 void removerAresta();
-void listarArestasPorPonto(const char* ponto);
+void listarAdjacentes(Grafo g, char vertice[]);
+Grafo lerGrafoDoFicheiro();
 void imprimirLocalizacao(const char* id);
-void listarTransportesMaisPerto(const char* ponto, int tipoTransporte);
+void listarAdjacentesRaio(const char* localizacaoAtual, int tipoTransporte);
+
 
 #endif

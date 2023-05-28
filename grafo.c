@@ -184,41 +184,81 @@ void removerAresta() {
     }
 }
 
-/**
- * @brief função que listar arestas de um ponto especifico
- * 
- * @param ponto ponto para ver as suas arestas
- */
-void listarArestasPorPonto(const char* ponto) {
-    // Abre o ficheiro para leitura
+void listarAdjacentes(Grafo g, char vertice[]) {
+    while (g != NULL && strcmp(g->vertice, vertice) != 0)
+        g = g->seguinte;
+
+    if (g != NULL) {
+        struct registo2* aux = g->adjacentes;
+        while (aux != NULL) {
+            printf("Adjacente: %s Peso: %.3f\n", aux->vertice, aux->peso);
+            aux = aux->seguinte;
+        }
+    }
+}
+
+Grafo lerGrafoDoFicheiro() {
     FILE* fp = fopen("arestas.txt", "r");
     if (fp == NULL) {
-        printf("Erro ao abrir o ficheiro de arestas!\n");
-        return;
+        printf("Erro ao abrir o ficheiro.\n");
+        return NULL;
     }
 
-    // Percorre o ficheiro de arestas linha por linha
-    char linha[MAX_LOCAL_LENGTH];
-    int encontrou = 0;
-    while (fgets(linha, MAX_LOCAL_LENGTH, fp)) {
-        // Lê o ponto e a aresta da linha atual
-        char pontoAtual[MAX_LOCAL_LENGTH];
-        char arestaAtual[MAX_LOCAL_LENGTH];
-        sscanf(linha, "%[^;];%[^;]", pontoAtual, arestaAtual);
+    char linha[100];
+    Grafo primeiro = NULL;
+    Grafo atual = NULL;
 
-        // Verifica se o ponto atual corresponde ao ponto fornecido
-        if (strcmp(pontoAtual, ponto) == 0) {
-            printf("Ponto: %s, Aresta: %s\n", pontoAtual, arestaAtual);
-            encontrou = 1;
+    while (fgets(linha, sizeof(linha), fp)) {
+        char vOrigem[50];
+        char vDestino[50];
+        float peso;
+
+        if (sscanf(linha, "%[^;];%[^;];%f", vOrigem, vDestino, &peso) == 3) {
+
+            if (!existeVertice(primeiro, vOrigem)) {
+                Grafo novo = malloc(sizeof(struct registo1));
+                strcpy(novo->vertice, vOrigem);
+                novo->adjacentes = NULL;
+                novo->seguinte = NULL;
+
+                if (primeiro == NULL) {
+                    primeiro = novo;
+                    atual = novo;
+                } else {
+                    atual->seguinte = novo;
+                    atual = novo;
+                }
+            }
+
+            if (!existeVertice(primeiro, vDestino)) {
+                Grafo novo = malloc(sizeof(struct registo1));
+                strcpy(novo->vertice, vDestino);
+                novo->adjacentes = NULL;
+                novo->seguinte = NULL;
+
+                if (primeiro == NULL) {
+                    primeiro = novo;
+                    atual = novo;
+                } else {
+                    atual->seguinte = novo;
+                    atual = novo;
+                }
+            }
+
+            Grafo origem = primeiro;
+            while (strcmp(origem->vertice, vOrigem) != 0)
+                origem = origem->seguinte;
+
+            struct registo2* novoAdjacente = malloc(sizeof(struct registo2));
+            strcpy(novoAdjacente->vertice, vDestino);
+            novoAdjacente->peso = peso;
+            novoAdjacente->seguinte = origem->adjacentes;
+            origem->adjacentes = novoAdjacente;
         }
     }
 
-    // Fecha o ficheiro
     fclose(fp);
-
-    if (!encontrou) {
-        printf("Nao foram encontradas arestas para o ponto '%s'\n", ponto);
-    }
+    return primeiro;
 }
 
 /**
@@ -227,90 +267,76 @@ void listarArestasPorPonto(const char* ponto) {
  * @param id id da localização
  */
 void imprimirLocalizacao(const char* id) {
-    FILE* arquivo = fopen("localizacoes.txt", "r");
-    if (arquivo == NULL) {
-        printf("Erro ao abrir o arquivo de localizacoes.\n");
+    FILE* ficheiro = fopen("localizacoes.txt", "r");
+    if (ficheiro == NULL) {
+        printf("Erro ao abrir o ficheiro de localizacoes.\n");
         return;
     }
 
     char linha[MAX_LOCAL_LENGTH];
     char* token;
 
-    while (fgets(linha, MAX_LOCAL_LENGTH, arquivo) != NULL) {
+    while (fgets(linha, MAX_LOCAL_LENGTH, ficheiro) != NULL) {
         token = strtok(linha, ";");
         if (strcmp(token, id) == 0) {
             token = strtok(NULL, ";");
             printf("Local: %s\n", token);
-            fclose(arquivo);
+            fclose(ficheiro);
             return;
         }
     }
 
-    fclose(arquivo);
+    fclose(ficheiro);
     printf("ID nao encontrado.\n");
 }
 
-/**
- * @brief função que lista um tipo de transportes a menos de 1km de um ponto especifico 
- * 
- * @param ponto ponto onde está a cliente
- * @param tipoTransporte inteiro que representa o tipo do transporte
- */
-void listarTransportesMaisPerto(const char* ponto, int tipoTransporte) {
-    char pontoAtual[MAX_LOCAL_LENGTH];
-    char arestaAtual[MAX_LOCAL_LENGTH];
+void listarAdjacentesRaio(const char* localizacaoAtual, int tipoTransporte) {
+    char arestaAtual[TAM];
     float peso;
     int idTransporte;
     int tipo;
-    char localizacao[MAX_LOCAL_LENGTH];
-    float preco;
+    char localizacao[TAM];
+    float custo;
     float bat;
     float aut;
 
-    // Abre o ficheiro de arestas para leitura
-    FILE* fpArestas = fopen("arestas.txt", "r");
-    if (fpArestas == NULL) {
-        printf("Erro ao abrir o ficheiro de arestas!\n");
+    Grafo grafo = lerGrafoDoFicheiro();
+    if (grafo == NULL) {
+        printf("Erro ao ler o grafo do ficheiro!\n");
         return;
     }
 
-    // Abre o ficheiro de transportes para leitura
-    FILE* fpTransportes = fopen("transportes.txt", "r");
-    if (fpTransportes == NULL) {
-        printf("Erro ao abrir o ficheiro de transportes!\n");
-        fclose(fpArestas);
+    transporte* inicioTransporte = lerTransportes();
+    if (inicioTransporte == NULL) {
+        printf("Erro ao ler os transportes do ficheiro!\n");
         return;
     }
 
-    // Percorre o ficheiro de arestas linha por linha
-    char linhaArestas[MAX_LOCAL_LENGTH];
     int encontrou = 0;
-    while (fgets(linhaArestas, MAX_LOCAL_LENGTH, fpArestas)) {
-        // Lê o ponto, a aresta e o peso da linha atual do ficheiro de arestas
-        sscanf(linhaArestas, "%[^;];%[^;];%f", pontoAtual, arestaAtual, &peso);
 
-        // Verifica se o ponto atual corresponde ao ponto fornecido e se o peso é menor que 1
-        if (strcmp(pontoAtual, ponto) == 0 && peso < 1.0) {
-            // Procura o transporte na localização correspondente
-            char linhaTransportes[MAX_LOCAL_LENGTH];
-            while (fgets(linhaTransportes, MAX_LOCAL_LENGTH, fpTransportes)) {
-                sscanf(linhaTransportes, "%d;%d;%[^;];%f;%f;%f", &idTransporte, &tipo, localizacao, &preco, &bat, &aut);
-
-                // Verifica se a localização do transporte corresponde à aresta atual
-                // Verifica também se o tipo do transporte corresponde ao tipo escolhido pelo cliente
-                if (strcmp(localizacao, arestaAtual) == 0 && tipo == tipoTransporte) {
-                    printf("ID: %d, Tipo: %d, Preco: %.2f, Bateria: %.2f, Autonomia; %.2f\n", idTransporte, tipo, preco, bat, aut);
-                    encontrou = 1;
+    // Percorre o grafo para encontrar o ponto atual
+    while (grafo != NULL) {
+        if (strcmp(grafo->vertice, localizacaoAtual) == 0) {
+            // Encontrou o ponto atual, percorre os adjacentes
+            Adjacente aux = grafo->adjacentes;
+            while (aux != NULL) {
+                // Percorre a lista de transportes para encontrar o transporte na localizacao correspondente
+                transporte* transporteAux = inicioTransporte;
+                while (transporteAux != NULL) {
+                    if (strcmp(transporteAux->localizacao, aux->vertice) == 0 && transporteAux->tipo == tipoTransporte) {
+                        printf("ID: %d, Tipo: %d, Custo: %.2f, Bateria: %.2f, Autonomia: %.2f\n", transporteAux->id, transporteAux->tipo, transporteAux->custo, transporteAux->bat, transporteAux->aut);
+                        encontrou = 1;
+                    }
+                    transporteAux = transporteAux->seguinte;
                 }
+                aux = aux->seguinte;
             }
+            break;
         }
+        grafo = grafo->seguinte;
     }
-
-    // Fecha os ficheiros
-    fclose(fpArestas);
-    fclose(fpTransportes);
 
     if (!encontrou) {
-        printf("Nao foram encontrados transportes do tipo escolhido a menos de 1km de %s.\n", ponto);
+        printf("Nao foram encontrados transportes do tipo escolhido e na sua localizacao atual.\n");
     }
 }

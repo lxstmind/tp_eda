@@ -455,10 +455,10 @@ void alugarTransporte(transporte* inicioTransporte, cliente* inicioCliente, int 
     // Calcula a distância percorrida
     float distancia_percorrida = 0.0;
 
-    // Lê as informações de distância do arquivo "arestas.txt"
+    // Lê as informações de distância do ficheiro "arestas.txt"
     FILE* fp_arestas = fopen("arestas.txt", "r");
     if (fp_arestas == NULL) {
-        printf("Erro ao abrir o arquivo de arestas.\n");
+        printf("Erro ao abrir o ficheiro de arestas.\n");
         return;
     }
 
@@ -474,11 +474,11 @@ void alugarTransporte(transporte* inicioTransporte, cliente* inicioCliente, int 
 
     fclose(fp_arestas);
 
-    // Atualiza a localizacao e a bateria do transporte no arquivo "transportes.txt"
+    // Atualiza a localizacao e a bateria do transporte no ficheiro "transportes.txt"
     FILE* fp_transporte = fopen("transportes.txt", "r");
     FILE* fp_temp = fopen("temp.txt", "w");
     if (fp_transporte == NULL || fp_temp == NULL) {
-        printf("Erro ao abrir os arquivos.\n");
+        printf("Erro ao abrir os ficheiros.\n");
         return;
     }
 
@@ -515,7 +515,7 @@ void alugarTransporte(transporte* inicioTransporte, cliente* inicioCliente, int 
     fclose(fp_transporte);
     fclose(fp_temp);
 
-    // Substitui o arquivo original pelo arquivo temporário
+    // Substitui o ficheiro original pelo ficheiro temporário
     remove("transportes.txt");
     rename("temp.txt", "transportes.txt");
 

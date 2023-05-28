@@ -128,6 +128,7 @@ void menuClienteLogin(int idLogin){
     char localizacao[MAX_MORADA_LENGTH +1];
     char idLocal[MAX_LOCAL_LENGTH];
     char ponto[MAX_LOCAL_LENGTH];
+    char localizacaoAtual[MAX_LOCAL_LENGTH];
     cliente* inicioCliente = lerClientes();
     transporte* inicioTransporte = lerTransportes();
 
@@ -149,6 +150,7 @@ void menuClienteLogin(int idLogin){
         printf("5. Listar os transportes disponiveis por localizacao\n");
         printf("6. Listar os transportes mais proximos disponiveis\n");
         printf("7. Alugar transporte\n");
+        printf("8 teste");
         printf("0. Voltar atras\n\n");
         printf("Escolha uma opcao: ");
         scanf("%d", &opcao);
@@ -189,12 +191,13 @@ void menuClienteLogin(int idLogin){
                 break;
             
             case 6:
-                printf("Qual e a sua localizacao atual?\n");
-                scanf("%s", ponto);
-                printf("Digite o tipo de transporte (1 - Trotinete, 2 - Bicicleta)\n");
+                printf("Digite a localizacao atual: ");
+                scanf("%s", localizacaoAtual);
+
+                printf("Digite o tipo de transporte desejado (1 - Trotinete, 2 - Bicicleta): ");
                 scanf("%d", &tipoTransporte);
-        
-                listarTransportesMaisPerto(ponto, tipoTransporte);
+
+                listarAdjacentesRaio(localizacaoAtual, tipoTransporte);
                 fflush(stdin);
                 getchar();
                 break;
@@ -207,6 +210,7 @@ void menuClienteLogin(int idLogin){
                 fflush(stdin);
                 getchar();
                 break;
+
         }
     } while(opcao!=0);
 }
@@ -293,7 +297,7 @@ void menuGestorLogin(){
     char vOrigem[MAX_LOCAL_LENGTH];
     char vDestino[MAX_LOCAL_LENGTH];
     float peso;
-    char ponto[MAX_LOCAL_LENGTH];
+    char vertice[MAX_LOCAL_LENGTH];
     transporte* inicioTransporte = lerTransportes();
     cliente* inicioCliente = lerClientes();
     gestor* inicioGestor = lerGestores();
@@ -417,21 +421,21 @@ void menuGestorLogin(){
                 if (resultado == 1) {
                     printf("Vertice criado com sucesso!\n");
 
-                    // Abre o arquivo "localizacoes.txt" em modo de escrita (cria o arquivo se não existir)
-                    FILE *arquivo = fopen("localizacoes.txt", "w");
-                    if (arquivo == NULL) {
-                        printf("Falha ao abrir o arquivo.\n");
+                    FILE *fp = fopen("localizacoes.txt", "a");
+                    if (fp == NULL) {
+                        printf("Falha ao abrir o ficheiro.\n");
                         break;
                     }
 
-                    // Escreve as informações do vértice no arquivo
-                    fprintf(arquivo, "%s;%s\n", novoId, nomeLugar);
+                    fprintf(fp, "%s;%s\n", novoId, nomeLugar);
 
-                    // Fecha o arquivo
-                    fclose(arquivo);
+                    fclose(fp);
                 } else {
                     printf("Falha ao criar vertice.\n");
                 }
+
+                fflush(stdin);
+                getchar();
                 break;
             }
 
@@ -452,19 +456,16 @@ void menuGestorLogin(){
                     printf("Falha ao criar aresta.\n");
                 }
 
-                FILE *arquivo = fopen("arestas.txt", "w");
-                if (arquivo == NULL) {
-                    printf("Falha ao abrir o arquivo.\n");
+                FILE* fp = fopen("arestas.txt", "a");
+                if (fp == NULL) {
+                    printf("Falha ao abrir o ficheiro.\n");
                     break;
                 }
 
-                // Escreve as informações da aresta no arquivo
-                fprintf(arquivo, "%s;%s;%.3f\n", vOrigem, vDestino, peso);
+                fprintf(fp, "%s;%s;%.3f\n", vOrigem, vDestino, peso);
 
-                // Fecha o arquivo
-                fclose(arquivo);
+                fclose(fp);
 
-                printf("Aresta criada com sucesso!\n");
                 fflush(stdin);
                 getchar();
                 break;
@@ -483,12 +484,19 @@ void menuGestorLogin(){
             break;
 
             case 15:
-                printf("Informe o ponto: ");
-                scanf("%s", ponto);
-                listarArestasPorPonto(ponto);
+                printf("Informe o vertice: ");
+                scanf("%s", vertice);
+
+                Grafo grafo = lerGrafoDoFicheiro();
+                if (grafo != NULL) {
+                    listarAdjacentes(grafo, vertice);
+                } else {
+                    printf("Erro ao ler o grafo do ficheiro.\n");
+                }
+            
                 fflush(stdin);
                 getchar();
-            break;
+                break;
         }
     } while(opcao!=0);
 }

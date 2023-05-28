@@ -1,7 +1,7 @@
 araras.quao.metabolismos;rolico.angico.almeiroes;0.710
 araras.quao.metabolismos;velhas.cigano.junte;0.600
 araras.quao.metabolismos;almeiroes.pacoquinhas.valem;0.250
-araras.quao.metabolismos;bocal.sardas.sorvetes;0,950
+araras.quao.metabolismos;bocal.sardas.sorvetes;0.950
 rolico.angico.almeiroes;araras.quao.metabolismos;0.710
 rolico.angico.almeiroes;velhas.cigano.junte;1.500
 rolico.angico.almeiroes;almeiroes.pacoquinhas.valem;3.410
@@ -14,7 +14,7 @@ almeiroes.pacoquinhas.valem;araras.quao.metabolismos;0.250
 almeiroes.pacoquinhas.valem;rolico.angico.almeiroes;3.410
 almeiroes.pacoquinhas.valem;velhas.cigano.junte;2.380
 almeiroes.pacoquinhas.valem;bocal.sardas.sorvetes;1.940
-bocal.sardas.sorvetes;araras.quao.metabolismos;0,950
+bocal.sardas.sorvetes;araras.quao.metabolismos;0.950
 bocal.sardas.sorvetes;rolico.angico.almeiroes;2.400
 bocal.sardas.sorvetes;velhas.cigano.junte;0.190
 bocal.sardas.sorvetes;almeiroes.pacoquinhas.valem;1.940

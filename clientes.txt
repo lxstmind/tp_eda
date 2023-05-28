@@ -1,1 +1,1 @@
-1;joao;pass;123333444;rolico.angico.almeiroes;956.84
+1;joao;pass;123333444;rolico.angico.almeiroes;952.55
