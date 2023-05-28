@@ -150,7 +150,6 @@ void menuClienteLogin(int idLogin){
         printf("5. Listar os transportes disponiveis por localizacao\n");
         printf("6. Listar os transportes mais proximos disponiveis\n");
         printf("7. Alugar transporte\n");
-        printf("8 teste");
         printf("0. Voltar atras\n\n");
         printf("Escolha uma opcao: ");
         scanf("%d", &opcao);

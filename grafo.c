@@ -184,6 +184,12 @@ void removerAresta() {
     }
 }
 
+/**
+ * @brief função que lista os vertices adjacentes de um determinado vertice
+ * 
+ * @param g grafo para qual vai ser procurado os vertices adjacentes
+ * @param vertice vértice para o qual vai listar os vértices adjacentes
+ */
 void listarAdjacentes(Grafo g, char vertice[]) {
     while (g != NULL && strcmp(g->vertice, vertice) != 0)
         g = g->seguinte;
@@ -197,6 +203,11 @@ void listarAdjacentes(Grafo g, char vertice[]) {
     }
 }
 
+/**
+ * @brief função que le as arestas de um ficheiro e retorna um grafo
+ * 
+ * @return Grafo grafo lido a partir do ficheiro arestas.txt
+ */
 Grafo lerGrafoDoFicheiro() {
     FILE* fp = fopen("arestas.txt", "r");
     if (fp == NULL) {
@@ -290,6 +301,12 @@ void imprimirLocalizacao(const char* id) {
     printf("ID nao encontrado.\n");
 }
 
+/**
+ * @brief função que lista os transportes de um determinado tipo a 1km de distancia da localizaçã atual
+ * 
+ * @param localizacaoAtual localização atual do cliente para o qual vão ser listados os vertices adjacentes a 1km
+ * @param tipoTransporte intiero que representa tipo de transporte
+ */
 void listarAdjacentesRaio(const char* localizacaoAtual, int tipoTransporte) {
     char arestaAtual[TAM];
     float peso;

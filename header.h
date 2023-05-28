@@ -119,5 +119,4 @@ Grafo lerGrafoDoFicheiro();
 void imprimirLocalizacao(const char* id);
 void listarAdjacentesRaio(const char* localizacaoAtual, int tipoTransporte);
 
-
 #endif
