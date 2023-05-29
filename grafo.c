@@ -331,6 +331,15 @@ void listarAdjacentesRaio(const char* localizacaoAtual, int tipoTransporte) {
 
     int encontrou = 0;
 
+    transporte* transporteAtual = inicioTransporte;
+    while (transporteAtual != NULL) {
+        if (strcmp(transporteAtual->localizacao, localizacaoAtual) == 0 && transporteAtual->tipo == tipoTransporte) {
+            printf("ID: %d, Tipo: %d, Custo: %.2f, Bateria: %.2f, Autonomia: %.2f\n", transporteAtual->id, transporteAtual->tipo, transporteAtual->custo, transporteAtual->bat, transporteAtual->aut);
+            encontrou = 1;
+        }
+        transporteAtual = transporteAtual->seguinte;
+    }
+
     // Percorre o grafo para encontrar a localização atual
     while (grafo != NULL) {
         if (strcmp(grafo->vertice, localizacaoAtual) == 0) {
